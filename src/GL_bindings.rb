@@ -1,3 +1,39 @@
+Func = Struct.new(:return, :name, :args)
+
+funcs = DATA.map do |func|
+  /([^\s]*)\s*([^(]*)\s*\(([^)]*)\);/ =~ func
+  Func.new($1, $2, $3)
+end
+
+File.open 'src/GL_bindings.cpp', 'w' do |f|
+  f.write <<-END
+#include "GL_bindings.hpp"
+
+#include "debug.hpp"
+
+#{ funcs.map { |func| "#{func.name}Proc #{func.name};" }.join "\n" }
+
+int GL_Bindings::init() {
+    int result = 0;
+
+#{
+  funcs.map do |func|
+    <<-IEND
+    #{func.name} = (#{func.name}Proc) SDL_GL_GetProcAddress("#{func.name}");
+    if (#{func.name} == NULL) {
+        result += 1;
+        Debug::error << "Unable to find function: #{func.name}" << std::endl;
+    }
+    IEND
+  end.join "\n"
+}
+    return result;
+}
+  END
+end
+
+File.open 'src/GL_bindings.hpp', 'w' do |f|
+  f.write <<-END
 #pragma once
 
 #include <SDL.h>
@@ -626,31 +662,29 @@ typedef double          GLclampd;       /* double precision float in [0,1] */
 #define GL_ALL_CLIENT_ATTRIB_BITS               0xFFFFFFFF
 #define GL_CLIENT_ALL_ATTRIB_BITS               0xFFFFFFFF
 
+#{ funcs.map { |func| "typedef #{func.return} (*#{func.name}Proc) (#{func.args});" }.join "\n" }
 
-
-#define DECLARE_EXTERN_FUNCTION(ret, func, ...) \
-    typedef ret (*func ## Proc) (__VA_ARGS__); \
-    extern "C" func ## Proc func
-
-/**
- * Functions
- */
-DECLARE_EXTERN_FUNCTION(void, glClear, GLbitfield);
-DECLARE_EXTERN_FUNCTION(void, glViewport, GLint, GLint, GLsizei, GLsizei);
-DECLARE_EXTERN_FUNCTION(void, glMultMatrixd, const GLdouble*);
-DECLARE_EXTERN_FUNCTION(void, glTranslated, GLdouble, GLdouble, GLdouble);
-DECLARE_EXTERN_FUNCTION(void, glMatrixMode, GLenum);
-DECLARE_EXTERN_FUNCTION(void, glCullFace, GLenum);
-DECLARE_EXTERN_FUNCTION(void, glDepthFunc, GLenum);
-DECLARE_EXTERN_FUNCTION(void, glPolygonMode, GLenum, GLenum);
-DECLARE_EXTERN_FUNCTION(void, glLoadIdentity, void);
-DECLARE_EXTERN_FUNCTION(void, glBegin, GLenum);
-DECLARE_EXTERN_FUNCTION(void, glEnd, void);
-DECLARE_EXTERN_FUNCTION(void, glColor3f, GLfloat, GLfloat, GLfloat);
-DECLARE_EXTERN_FUNCTION(void, glColor4f, GLfloat, GLfloat, GLfloat, GLfloat);
-DECLARE_EXTERN_FUNCTION(void, glVertex3f, GLfloat, GLfloat, GLfloat);
-DECLARE_EXTERN_FUNCTION(void, glClearColor, GLclampf, GLclampf, GLclampf);
+#{ funcs.map { |func| %Q[extern "C" #{func.name}Proc #{func.name};] }.join "\n" }
 
 namespace GL_Bindings {
-    int init();
-}
+  int init();
+};
+  END
+end
+
+__END__
+void glClear(GLbitfield);
+void glViewport(GLint, GLint, GLsizei, GLsizei);
+void glMultMatrixd(const GLdouble*);
+void glTranslated(GLdouble, GLdouble, GLdouble);
+void glMatrixMode(GLenum);
+void glCullFace(GLenum);
+void glDepthFunc(GLenum);
+void glPolygonMode(GLenum, GLenum);
+void glLoadIdentity(void);
+void glBegin(GLenum);
+void glEnd(void);
+void glColor3f(GLfloat, GLfloat, GLfloat);
+void glColor4f(GLfloat, GLfloat, GLfloat, GLfloat);
+void glVertex3f(GLfloat, GLfloat, GLfloat);
+void glClearColor(GLclampf, GLclampf, GLclampf);

@@ -30,13 +30,16 @@ PROJECT = gamelike
 
 ###############################################################################
 
-all: $(PROJECT)
+all: src/GL_bindings.hpp $(PROJECT)
 rebuild: clean all
 
 
 $(PROJECT): $(OBJECTS:src/%=build/%)
 	$(CXX) $(CPPFLAGS) -o $@ $^ $(LDFLAGS)
 
+
+src/GL_bindings.hpp src/GL_bindings.cpp: src/GL_bindings.rb
+	ruby src/GL_bindings.rb
 
 build/%.o: src/%.c
 	@mkdir -p $(dir $@)
@@ -51,6 +54,7 @@ build/%.o: src/%.cpp
 clean:
 	rm -rf build/*
 	rm -rf .dep/*
+	rm -rf src/GL_bindings.hpp src/GL_bindings.cpp
 
 
 .PRECIOUS: build/%.o
