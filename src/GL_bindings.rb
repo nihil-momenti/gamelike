@@ -668,7 +668,7 @@ typedef double          GLclampd;       /* double precision float in [0,1] */
 
 namespace GL_Bindings {
   int init();
-};
+}
   END
 end
 

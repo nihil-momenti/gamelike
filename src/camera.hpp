@@ -18,4 +18,4 @@ namespace Camera {
     extern void tick();
     extern void look();
     extern void perspective();
-};
+}
