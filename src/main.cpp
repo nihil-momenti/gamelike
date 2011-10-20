@@ -6,14 +6,14 @@
 
 #include "world.hpp"
 #include "world_view.hpp"
-#include "player.hpp"
+#include "camera.hpp"
 
 #include <cmath>
 
 namespace Main {
     WorldView wv;
-    Player player;
     bool running = true;
+    Vector3 colour(0.0, 0.0, 0.0);
 
     void sdl_init() {
         if (SDL_Init( SDL_INIT_EVERYTHING ) != 0) {
@@ -70,45 +70,91 @@ namespace Main {
     }
 
     void Tick() {
-        player.tick();
+        //Camera::tick();
+        static Vector3 delta(0.01, 0.01, 0.01);
+        colour += delta;
+        if (delta.dx > 0 && colour.dx >= 1.0) {
+            delta = -delta;
+        } else if (delta.dx < 0 && colour.dx <= 0.0) {
+            delta = -delta;
+        }
     }
 
     void Render() {
         glViewport(0, 0, 640, 480);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        glClearColor(colour.dx, colour.dy, colour.dz);
+
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        double aspect = 1.0,
-               fov = 50.0,
-               near = 0.1,
-               far = 100.0;
-        double f = cos(fov / 2) / sin(fov / 2);
-        GLdouble M[16] = {
-            f / aspect, 0.0,    0.0,                            0.0,
-            0.0,        f,      0.0,                            0.0,
-            0.0,        0.0,    (far + near) / (near - far),    (2 * far * near) / (near - far),
-            0.0,        0.0,    -1.0,                           0.0
-        };
-
-        glMultMatrixd(M);
-        //gluPerspective(50.0, 1.0, 0.1, 1000.0);
+        Camera::perspective();
 
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
-        player.look();
+        Camera::look();
 
-        glPolygonMode(GL_FRONT, GL_FILL);
-        glDepthFunc(GL_LESS);
-        glCullFace(GL_BACK);
-        glColor4f(0.44, 0.31, 0.21, 1.0);
+//        glEnable(GL_CULL_FACE);
+//        glCullFace(GL_BACK);
+//        glFrontFace(GL_CCW);
+//        glPolygonMode(GL_FRONT, GL_FILL);
+//        glColor4f(0.44, 0.31, 0.21, 1.0);
 
-        glBegin(GL_QUADS);
-            glColor3f(1, 0, 0); glVertex3f(0, 0, 0);
-            glColor3f(1, 1, 0); glVertex3f(1, 0, 0);
-            glColor3f(1, 0, 1); glVertex3f(1, 1, 0);
-            glColor3f(1, 1, 1); glVertex3f(0, 1, 0);
-        glEnd();
+        for (int x = -100; x < 100; x = x+10) {
+            for (int y = -100; y < 100; y = y+10) {
+                for (int z = -100; z < 100; z = z+10) {
+                    glBegin(GL_TRIANGLES);
+                        glColor3f(1, 0, 0); glVertex3f(x+1, y+1, z+1);
+                        glColor3f(1, 1, 0); glVertex3f(x+1, y+1, z-1);
+                        glColor3f(1, 0, 1); glVertex3f(x+1, y-1, z-1);
+
+                        glColor3f(1, 0, 1); glVertex3f(x+1, y-1, z-1);
+                        glColor3f(1, 1, 1); glVertex3f(x+1, y-1, z+1);
+                        glColor3f(1, 0, 0); glVertex3f(x+1, y+1, z+1);
+
+                        glColor3f(1, 0, 0); glVertex3f(x-1, y+1, z+1);
+                        glColor3f(1, 1, 0); glVertex3f(x-1, y-1, z+1);
+                        glColor3f(1, 0, 1); glVertex3f(x-1, y-1, z-1);
+
+                        glColor3f(1, 0, 1); glVertex3f(x-1, y-1, z-1);
+                        glColor3f(1, 1, 1); glVertex3f(x-1, y+1, z-1);
+                        glColor3f(1, 0, 0); glVertex3f(x-1, y+1, z+1);
+
+                        glColor3f(1, 0, 0); glVertex3f(x+1, y+1, z+1);
+                        glColor3f(1, 1, 0); glVertex3f(x+1, y-1, z+1);
+                        glColor3f(1, 0, 1); glVertex3f(x-1, y-1, z+1);
+
+                        glColor3f(1, 0, 1); glVertex3f(x-1, y-1, z+1);
+                        glColor3f(1, 1, 1); glVertex3f(x-1, y+1, z+1);
+                        glColor3f(1, 0, 0); glVertex3f(x+1, y+1, z+1);
+
+                        glColor3f(1, 0, 0); glVertex3f(x+1, y+1, z-1);
+                        glColor3f(1, 1, 0); glVertex3f(x-1, y+1, z-1);
+                        glColor3f(1, 0, 1); glVertex3f(x-1, y-1, z-1);
+
+                        glColor3f(1, 0, 1); glVertex3f(x-1, y-1, z-1);
+                        glColor3f(1, 1, 1); glVertex3f(x+1, y-1, z-1);
+                        glColor3f(1, 0, 0); glVertex3f(x+1, y+1, z-1);
+
+                        glColor3f(1, 0, 0); glVertex3f(x+1, y+1, z+1);
+                        glColor3f(1, 1, 0); glVertex3f(x-1, y+1, z+1);
+                        glColor3f(1, 0, 1); glVertex3f(x-1, y+1, z-1);
+
+                        glColor3f(1, 0, 1); glVertex3f(x-1, y+1, z-1);
+                        glColor3f(1, 1, 1); glVertex3f(x+1, y+1, z-1);
+                        glColor3f(1, 0, 0); glVertex3f(x+1, y+1, z+1);
+
+                        glColor3f(1, 0, 0); glVertex3f(x+1, y-1, z+1);
+                        glColor3f(1, 1, 0); glVertex3f(x+1, y-1, z-1);
+                        glColor3f(1, 0, 1); glVertex3f(x-1, y-1, z-1);
+
+                        glColor3f(1, 0, 1); glVertex3f(x-1, y-1, z-1);
+                        glColor3f(1, 1, 1); glVertex3f(x-1, y-1, z+1);
+                        glColor3f(1, 0, 0); glVertex3f(x+1, y-1, z+1);
+                    glEnd();
+                }
+            }
+        }
 
         //wv.display();
 
