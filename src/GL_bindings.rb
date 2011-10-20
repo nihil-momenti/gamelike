@@ -688,3 +688,6 @@ void glColor3f(GLfloat, GLfloat, GLfloat);
 void glColor4f(GLfloat, GLfloat, GLfloat, GLfloat);
 void glVertex3f(GLfloat, GLfloat, GLfloat);
 void glClearColor(GLclampf, GLclampf, GLclampf);
+void glEnable(GLenum);
+void glDisable(GLenum);
+void glFrontFace(GLenum);
