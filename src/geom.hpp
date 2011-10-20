@@ -8,72 +8,54 @@ struct Vector3;
 struct Point3 {
     double x, y, z;
 
-    Point3() :
-        x(0.0), y(0.0), z(0.0) {
-    }
+    Point3();
+    Point3(double, double, double);
+    Point3(const Point3 &);
 
-    Point3(double x, double y, double z) :
-        x(x), y(y), z(z) {
-    }
+    bool operator== (const Point3 &) const;
+    bool operator!= (const Point3 &) const;
 
-    Point3(const Point3& other) :
-        x(other.x), y(other.y), z(other.z) {
-    }
+    friend Point3 operator+ (const Point3 &, const Vector3 &);
+    friend Point3 operator- (const Point3 &, const Vector3 &);
 
-    bool operator== (const Point3& other);
-    bool operator!= (const Point3& other);
+    friend Vector3 operator- (const Point3 &, const Point3 &);
 
-    Point3 operator+ (const Vector3& other);
-    Point3 operator- (const Vector3& other);
-
-    Vector3 operator- (const Point3& other);
-
-    friend std::ostream& operator<< (std::ostream& o, const Point3& point);
+    friend std::ostream& operator<< (std::ostream &, const Point3 &);
 };
 
 struct Vector3 {
     double dx, dy, dz;
 
-    Vector3() :
-        dx(0.0), dy(0.0), dz(0.0) {
-    }
+    Vector3();
+    Vector3(double dx, double dy, double dz);
+    Vector3(const Vector3& other);
 
-    Vector3(double dx, double dy, double dz) :
-        dx(dx), dy(dy), dz(dz) {
-    }
+    double length() const;
+    double dot(const Vector3 &) const;
+    Vector3 cross(const Vector3 &) const;
+    Vector3 unit() const;
 
-    Vector3(const Vector3& other) :
-        dx(other.dx), dy(other.dy), dz(other.dz) {
-    }
+    bool operator== (const Vector3 &) const;
+    bool operator!= (const Vector3 &) const;
 
-    double length();
-    double dot(const Vector3& other);
-    Vector3 cross(const Vector3& other);
-    Vector3 unit();
+    Vector3 & operator+= (const Vector3 &);
+    Vector3 & operator-= (const Vector3 &);
 
-    bool operator== (const Vector3& other);
-    bool operator!= (const Vector3& other);
+    Vector3 & operator*= (double rhs);
+    Vector3 & operator/= (double rhs);
 
-    Vector3 operator+ (const Vector3& other);
-    Vector3 operator- (const Vector3& other);
+    friend Vector3 operator+ (const Vector3 &, const Vector3 &);
+    friend Vector3 operator- (const Vector3 &, const Vector3 &);
 
-    Vector3 operator* (double other);
-    Vector3 operator/ (double other);
+    friend Vector3 operator* (const Vector3 &, double);
+    friend Vector3 operator* (double, const Vector3 &);
+    friend Vector3 operator/ (const Vector3 &, double);
+    friend Vector3 operator/ (double, const Vector3 &);
+
+    friend Vector3 operator- (const Vector3 &);
 
     friend std::ostream& operator<< (std::ostream& o, const Vector3& vector);
 };
-
-inline Vector3 operator- (const Vector3& v) {
-    return Vector3(-v.dx, -v.dy, -v.dz);
-}
-
-inline Vector3 operator* (double lhs, Vector3 rhs) {
-    return rhs * lhs;
-}
-
-inline Vector3 operator/ (double lhs, Vector3 rhs) {
-    return rhs / lhs;
-}
 
 struct Matrix3 {
     double values[9];
@@ -88,11 +70,11 @@ struct Matrix3 {
     Matrix3 transpose();
     Vector3 col(int num);
 
-    Vector3 operator* (const Vector3 &other);
-    Matrix3 operator+ (const Matrix3 &other);
-    Matrix3 operator- (const Matrix3 &other);
-    Matrix3 operator* (double other);
-    Matrix3 operator* (const Matrix3 &other);
+    Vector3 operator* (const Vector3 &rhs);
+    Matrix3 operator+ (const Matrix3 &rhs);
+    Matrix3 operator- (const Matrix3 &rhs);
+    Matrix3 operator* (double rhs);
+    Matrix3 operator* (const Matrix3 &rhs);
 };
 
 inline Matrix3 operator* (double lhs, Matrix3 rhs) {
