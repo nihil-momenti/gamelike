@@ -14,11 +14,13 @@ namespace Camera {
     static Point3 position(0, 0, 3);
     static Point3 lookat(0, 0, 2);
     static Vector3 viewup(0, 1, 0);
-    static double sensitivity = 1.0;
+    static double sensitivity = 0.001;
     static double speed = 0.01;
     static std::set<Direction> moving;
     static Uint32 last_update;
-    static double aspect = 640.0 / 480.0;
+    static int width = 640;
+    static int height = 480;
+    static double aspect = width / (double) height;
     static double fov = 50.0;
     static double near = 0.1;
     static double far = 100.0;
@@ -29,6 +31,10 @@ namespace Camera {
     static void up(double);
     static void forward(double);
     static void right(double);
+
+    void init() {
+        glViewport(0, 0, width, height);
+    }
 
     void move(Direction direction) {
         if (moving.empty()) {
@@ -105,8 +111,8 @@ namespace Camera {
 
         double r = sqrt(x*x + y*y + z*z);
 
-        double theta = std::max(0.01, std::min(M_PI - 0.01, acos(y / r) + sensitivity * rotation.second));
-        double phi = atan2(z, x) + sensitivity * rotation.first;
+        double theta = std::max(0.01, std::min(M_PI - 0.01, acos(y / r) - sensitivity * rotation.second));
+        double phi = atan2(z, x) - sensitivity * rotation.first;
 
         x = r * sin(theta) * cos(phi);
         y = r * cos(theta);
@@ -138,5 +144,13 @@ namespace Camera {
         Vector3 movement = amount * facing().cross(viewup).unit();
         position = position + movement;
         lookat = lookat + movement;
+    }
+
+    void set_window(int w, int h) {
+        width = w;
+        height = h;
+        aspect = width / (double) height;
+        std::cout << "Changed dimensions to [" << width << ',' << height << "]." << std::endl;
+        glViewport(0, 0, width, height);
     }
 }

@@ -2,12 +2,28 @@
 
 #include "camera.hpp"
 
+
 namespace Main {
+    bool grabbed = true;
+
+    void toggle_grab() {
+        grabbed = !grabbed;
+
+        if (grabbed) {
+            SDL_ShowCursor(SDL_DISABLE);
+            SDL_WM_GrabInput(SDL_GRAB_ON);
+        } else {
+            SDL_ShowCursor(SDL_ENABLE);
+            SDL_WM_GrabInput(SDL_GRAB_OFF);
+        }
+    }
+
     void handle_event(SDL_Event event) {
             switch (event.type) {
                 case SDL_QUIT:
                     running = false;
                     break;
+
                 case SDL_KEYDOWN:
                     switch (event.key.keysym.sym) {
                         case SDLK_q:
@@ -33,10 +49,14 @@ namespace Main {
                         case SDLK_z:
                             Camera::move(DOWN);
                             break;
+                        case SDLK_ESCAPE:
+                            toggle_grab();
+                            break;
                         default:
                             break;
                     }
                     break;
+
                 case SDL_KEYUP:
                     switch (event.key.keysym.sym) {
                         case SDLK_w:
@@ -61,6 +81,18 @@ namespace Main {
                             break;
                     }
                     break;
+
+                case SDL_MOUSEMOTION:
+                    if (grabbed) {
+                        Camera::turn(std::pair<double, double>(event.motion.xrel, event.motion.yrel));
+                    }
+                    break;
+
+                case SDL_VIDEORESIZE:
+                    glClearColor(0.9, 0.9, 0.9);
+                    Camera::set_window(event.resize.w, event.resize.h);
+                    break;
+
                 default:
                     break;
             }

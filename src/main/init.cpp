@@ -1,5 +1,7 @@
 #include "main.hpp"
 
+#include "camera.hpp"
+
 namespace Main {
     int sdl_init() {
         if (SDL_Init( SDL_INIT_EVERYTHING ) != 0) {
@@ -29,6 +31,8 @@ namespace Main {
         }
         Debug::debug << "Video Mode Set" << std::endl;
 
+        SDL_ShowCursor(SDL_DISABLE);
+        SDL_WM_GrabInput(SDL_GRAB_ON);
         return 0;
     }
 
@@ -40,8 +44,9 @@ namespace Main {
 
         glClearColor(0.9, 0.9, 0.9);
         glEnable(GL_DEPTH_TEST);
-        glViewport(0, 0, 640, 480);
         glEnable(GL_CULL_FACE);
+
+        Camera::init();
 
         return 0;
     }
