@@ -82,8 +82,8 @@ namespace Camera {
         double f = tan(M_PI_2 - fov * M_PI / 180 / 2);
 
         GLdouble M[16] = {
-            f / aspect, 0.0,    f,                                   0.0,
-            0.0,        0.0,    0.0,                                 0.0,
+            f / aspect, 0.0,    0.0,                                 0.0,
+            0.0,        f,      0.0,                                 0.0,
             0.0,        0.0,    (far + near) / (near - far),        -1.0,
             0.0,        0.0,    (2 * far * near) / (near - far),     0.0
         };
