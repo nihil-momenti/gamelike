@@ -55,7 +55,12 @@ namespace Camera {
         Uint32 update_time;
         update_time = SDL_GetTicks();
 
+#if __cplusplus > 199711L
         for (const Direction &dir : moving) {
+#else
+        for (std::set<Direction>::const_iterator it = moving.begin(); it != moving.end(); it++) {
+            const Direction &dir = *it;
+#endif
             switch (dir) {
                 case FORWARD:  forward( speed * (update_time - last_update)); break;
                 case BACK:     forward(-speed * (update_time - last_update)); break;
