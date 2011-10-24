@@ -8,9 +8,9 @@ Chunk Chunk::gen_random(int x, int y, int z) {
     c.y = y;
     c.z = z;
 
-    for (unsigned int i = 0; i < CHUNK_SIZE; i++) {
-        for (unsigned int j = 0; j < CHUNK_SIZE; j++) {
-            for (unsigned int k = 0; k < CHUNK_HEIGHT; k++) {
+    for (int i = 0; i < CHUNK_SIZE; i++) {
+        for (int j = 0; j < CHUNK_SIZE; j++) {
+            for (int k = 0; k < CHUNK_HEIGHT; k++) {
                 if (rand() < RAND_MAX / 2) {
                     c.blocks[i][j][k].block_type = 1;
                 } else {
