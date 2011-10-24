@@ -2,8 +2,8 @@
 
 #include "block.hpp"
 
-static const int CHUNK_SIZE = 128;
-static const int CHUNK_HEIGHT = 64;
+static const int CHUNK_SIZE = 16;
+static const int CHUNK_HEIGHT = 8;
 
 struct Chunk {
     Block blocks[CHUNK_SIZE][CHUNK_SIZE][CHUNK_HEIGHT];

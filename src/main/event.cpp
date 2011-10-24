@@ -27,6 +27,12 @@ namespace Main {
                         case SDLK_d:
                             Camera::move(RIGHT);
                             break;
+                        case SDLK_SPACE:
+                            Camera::move(UP);
+                            break;
+                        case SDLK_z:
+                            Camera::move(DOWN);
+                            break;
                         default:
                             break;
                     }
@@ -44,6 +50,12 @@ namespace Main {
                             break;
                         case SDLK_d:
                             Camera::stop(RIGHT);
+                            break;
+                        case SDLK_SPACE:
+                            Camera::stop(UP);
+                            break;
+                        case SDLK_z:
+                            Camera::stop(DOWN);
                             break;
                         default:
                             break;

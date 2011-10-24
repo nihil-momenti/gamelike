@@ -8,7 +8,7 @@
 #include <cmath>
 
 namespace Main {
-    //WorldView wv;
+    WorldView wv;
     bool running = true;
     bool sdl_initialized = false;
 
@@ -26,8 +26,8 @@ namespace Main {
             return;
         }
 
-        //World world = World::gen_random();
-        //wv = WorldView(world);
+        World world = World::gen_random();
+        wv = WorldView(world);
     }
 
     void Event() {
@@ -114,7 +114,7 @@ namespace Main {
             }
         }
 
-        //wv.display();
+        wv.display();
 
         SDL_GL_SwapBuffers();
     }
