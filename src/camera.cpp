@@ -1,5 +1,7 @@
 #include "camera.hpp"
 
+#include "debug.hpp"
+
 #include <SDL.h>
 #include "GL_bindings.hpp"
 
@@ -13,7 +15,7 @@ namespace Camera {
     static Point3 lookat(0, 0, 2);
     static Vector3 viewup(0, 1, 0);
     static double sensitivity = 1.0;
-    static double speed = 2.0;
+    static double speed = 0.01;
     static std::set<Direction> moving;
     static Uint32 last_update;
     static double aspect = 640.0 / 480.0;
@@ -29,6 +31,9 @@ namespace Camera {
     static void right(double);
 
     void move(Direction direction) {
+        if (moving.empty()) {
+            last_update = SDL_GetTicks();
+        }
         moving.insert(direction);
     }
 

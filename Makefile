@@ -11,6 +11,7 @@ CFLAGS += -g
 CFLAGS += -MD -MP -MF .dep/$(subst /,-,$@).d
 CFLAGS += $(shell pkg-config --cflags sdl)
 CFLAGS += $(ORIGINAL_CFLAGS)
+CFLAGS += -iquote$(realpath ./src)
 
 CPPFLAGS = $(CFLAGS) $(ORIGINAL_CPPFLAGS)
 
