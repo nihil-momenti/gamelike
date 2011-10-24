@@ -11,6 +11,7 @@ CFLAGS += -g
 CFLAGS += -MD -MP -MF .dep/$(subst /,-,$@).d
 CFLAGS += $(shell pkg-config --cflags sdl)
 CFLAGS += $(ORIGINAL_CFLAGS)
+CFLAGS += -iquote$(abspath ./src)
 
 CPPFLAGS = $(CFLAGS) $(ORIGINAL_CPPFLAGS)
 
@@ -25,6 +26,7 @@ C_FILES += $(wildcard src/*/*.c)
 
 CPP_FILES =  $(wildcard src/*.cpp)
 CPP_FILES += $(wildcard src/*/*.cpp)
+CPP_FILES += src/GL_bindings.cpp
 
 OBJECTS = $(C_FILES:.c=.o) $(CPP_FILES:.cpp=.o)
 
