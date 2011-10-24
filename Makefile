@@ -23,6 +23,7 @@ C_FILES += $(wildcard src/*/*.c)
 
 CPP_FILES =  $(wildcard src/*.cpp)
 CPP_FILES += $(wildcard src/*/*.cpp)
+CPP_FILES += src/GL_bindings.cpp
 
 OBJECTS = $(C_FILES:.c=.o) $(CPP_FILES:.cpp=.o)
 
