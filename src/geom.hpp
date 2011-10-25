@@ -27,8 +27,8 @@ struct Vector3 {
     double dx, dy, dz;
 
     Vector3();
-    Vector3(double dx, double dy, double dz);
-    Vector3(const Vector3& other);
+    Vector3(double, double, double);
+    Vector3(const Vector3 &);
 
     double length() const;
     double dot(const Vector3 &) const;
@@ -41,8 +41,8 @@ struct Vector3 {
     Vector3 & operator+= (const Vector3 &);
     Vector3 & operator-= (const Vector3 &);
 
-    Vector3 & operator*= (double rhs);
-    Vector3 & operator/= (double rhs);
+    Vector3 & operator*= (double);
+    Vector3 & operator/= (double);
 
     friend Vector3 operator+ (const Vector3 &, const Vector3 &);
     friend Vector3 operator- (const Vector3 &, const Vector3 &);
@@ -50,11 +50,42 @@ struct Vector3 {
     friend Vector3 operator* (const Vector3 &, double);
     friend Vector3 operator* (double, const Vector3 &);
     friend Vector3 operator/ (const Vector3 &, double);
-    friend Vector3 operator/ (double, const Vector3 &);
 
     friend Vector3 operator- (const Vector3 &);
 
-    friend std::ostream& operator<< (std::ostream& o, const Vector3& vector);
+    friend std::ostream& operator<< (std::ostream&, const Vector3&);
+};
+
+struct Quaternion {
+    double r, i, j, k;
+
+    Quaternion();
+    Quaternion(double, double, double, double);
+    Quaternion(const Quaternion &);
+
+    double norm() const;
+    Quaternion unit() const;
+
+    bool operator== (const Quaternion &) const;
+    bool operator!= (const Quaternion &) const;
+
+    Quaternion & operator+= (const Quaternion &);
+    Quaternion & operator-= (const Quaternion &);
+    Quaternion & operator*= (const Quaternion &);
+
+    Quaternion & operator*= (double);
+    Quaternion & operator/= (double);
+
+    friend Quaternion operator+ (const Quaternion &, const Quaternion &);
+    friend Quaternion operator- (const Quaternion &, const Quaternion &);
+
+    friend Quaternion operator* (const Quaternion &, double);
+    friend Quaternion operator* (double, const Quaternion &);
+    friend Quaternion operator/ (const Quaternion &, double);
+
+    friend Quaternion operator- (const Quaternion &);
+
+    friend std::ostream& operator<< (std::ostream &, const Quaternion &);
 };
 
 struct Matrix3 {
