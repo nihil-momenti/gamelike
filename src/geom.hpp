@@ -62,6 +62,8 @@ struct Quaternion {
     Quaternion();
     Quaternion(double, double, double, double);
     Quaternion(const Quaternion &);
+    Quaternion(const Vector3 &);
+    Quaternion(double, const Vector3 &);
 
     double norm() const;
     Quaternion unit() const;

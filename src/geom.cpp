@@ -142,8 +142,16 @@
         : r(r), i(i), j(j), k(k) {
     }
 
-    Quaternion::Quaternion(const Quaternion& other)
+    Quaternion::Quaternion(const Quaternion &other)
         : r(other.r), i(other.i), j(other.j), k(other.k) {
+    }
+
+    Quaternion::Quaternion(const Vector3 &vec)
+        : r(0.0), i(vec.dx), j(vec.dy), k(vec.dz) {
+    }
+
+    Quaternion::Quaternion(double angle, const Vector3 &vec)
+        : r(cos(angle * M_PI_2 / 360)), i(vec.dx * sin(angle * M_PI_2 / 360)), j(vec.dy * sin(angle * M_PI_2 / 360)), k(vec.dz * sin(angle * M_PI_2 / 360)) {
     }
 
     double Quaternion::norm() const {
