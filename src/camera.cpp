@@ -66,7 +66,7 @@ namespace Camera {
     }
 
     void look(double interpolation) {
-        Vector3 up = side().cross(facing());
+        Vector3 up = side().cross(facing()).unit();
 
         GLdouble M[16] = {
         //    side().dx,     side().dy,     side().dz,     0.0,
@@ -129,7 +129,7 @@ namespace Camera {
     }
 
     Vector3 side() {
-        return facing().cross(viewup);
+        return facing().cross(viewup).unit();
     }
 
     void up(double amount) {
