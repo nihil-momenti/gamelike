@@ -51,6 +51,10 @@ namespace Main {
 
         Camera::init(width, height);
 
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        Camera::perspective();
+
         return 0;
     }
 }

@@ -15,9 +15,8 @@ namespace Camera {
     static Point3 lookat(0, 0, 2);
     static Vector3 viewup(0, 1, 0);
     static double sensitivity = 0.001;
-    static double speed = 0.01;
+    static double speed = 1.0;
     static std::set<Direction> moving;
-    static Uint32 last_update;
     static double aspect = 0.0;
     static double fov = 50.0;
     static double near = 0.1;
@@ -37,9 +36,6 @@ namespace Camera {
     }
 
     void move(Direction direction) {
-        if (moving.empty()) {
-            last_update = SDL_GetTicks();
-        }
         moving.insert(direction);
     }
 
@@ -52,9 +48,6 @@ namespace Camera {
             return;
         }
 
-        Uint32 update_time;
-        update_time = SDL_GetTicks();
-
 #if __cplusplus > 199711L
         for (const Direction &dir : moving) {
 #else
@@ -62,26 +55,28 @@ namespace Camera {
             const Direction &dir = *it;
 #endif
             switch (dir) {
-                case FORWARD:  forward( speed * (update_time - last_update)); break;
-                case BACK:     forward(-speed * (update_time - last_update)); break;
-                case RIGHT:    right(   speed * (update_time - last_update)); break;
-                case LEFT:     right(  -speed * (update_time - last_update)); break;
-                case UP:       up(      speed * (update_time - last_update)); break;
-                case DOWN:     up(     -speed * (update_time - last_update)); break;
+                case FORWARD:  forward(speed);  break;
+                case BACK:     forward(-speed); break;
+                case RIGHT:    right(speed);    break;
+                case LEFT:     right(-speed);   break;
+                case UP:       up(speed);       break;
+                case DOWN:     up(-speed);      break;
             }
         }
-
-        last_update = update_time;
     }
 
-    void look() {
+    void look(double interpolation) {
         Vector3 up = side().cross(facing());
 
         GLdouble M[16] = {
-            side().dx,     side().dy,     side().dz,     0.0,
-            up.dx,         up.dy,         up.dz,         0.0,
-            -facing().dx,  -facing().dy,  -facing().dz,  0.0,
-            0.0,           0.0,           0.0,           1.0
+        //    side().dx,     side().dy,     side().dz,     0.0,
+        //    up.dx,         up.dy,         up.dz,         0.0,
+        //    -facing().dx,  -facing().dy,  -facing().dz,  0.0,
+        //    0.0,           0.0,           0.0,           1.0
+            side().dx,      up.dx,      -facing().dx,       0.0,
+            side().dy,      up.dy,      -facing().dy,       0.0,
+            side().dz,      up.dz,      -facing().dz,       0.0,
+            0.0,            0.0,        0.0,                1.0
         };
 
         glMultMatrixd(M);
@@ -107,8 +102,8 @@ namespace Camera {
         glMultMatrixd(M);
     }
 
-    void turn(std::pair<double, double> rotation) {
-        Vector3 original_look = lookat - position;
+    void turn(double horizontal, double vertical) {
+        Vector3 original_look = facing();
 
         double x = original_look.dx;
         double y = original_look.dy;
@@ -116,8 +111,11 @@ namespace Camera {
 
         double r = sqrt(x*x + y*y + z*z);
 
-        double theta = std::max(0.01, std::min(M_PI - 0.01, acos(y / r) - sensitivity * rotation.second));
-        double phi = atan2(z, x) - sensitivity * rotation.first;
+        double theta = acos(y / r) + sensitivity * vertical;
+        double phi = atan2(z, x) + sensitivity * horizontal;
+
+        theta = std::max(0.01, theta);
+        theta = std::min(M_PI - 0.01, theta);
 
         x = r * sin(theta) * cos(phi);
         y = r * cos(theta);
@@ -131,8 +129,9 @@ namespace Camera {
     }
 
     Vector3 side() {
-        return facing().cross(viewup).unit();
+        return facing().cross(viewup);
     }
+
     void up(double amount) {
         Vector3 movement = amount * viewup;
         position = position + movement;
@@ -140,13 +139,13 @@ namespace Camera {
     }
 
     void forward(double amount) {
-        Vector3 movement = amount * facing().unit();
+        Vector3 movement = amount * facing();
         position = position + movement;
         lookat = lookat + movement;
     }
 
     void right(double amount) {
-        Vector3 movement = amount * facing().cross(viewup).unit();
+        Vector3 movement = amount * side();
         position = position + movement;
         lookat = lookat + movement;
     }

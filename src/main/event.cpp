@@ -84,7 +84,7 @@ namespace Main {
 
                 case SDL_MOUSEMOTION:
                     if (grabbed) {
-                        Camera::turn(std::pair<double, double>(event.motion.xrel, event.motion.yrel));
+                        Camera::turn(event.motion.xrel, event.motion.yrel);
                     }
                     break;
 

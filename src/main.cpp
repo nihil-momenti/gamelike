@@ -42,16 +42,12 @@ namespace Main {
         Camera::tick();
     }
 
-    void Render() {
+    void Render(double interpolation) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        Camera::perspective();
 
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
-        Camera::look();
+        Camera::look(interpolation);
 
         glCullFace(GL_BACK);
         glFrontFace(GL_CW);
@@ -126,13 +122,28 @@ namespace Main {
     }
 }
 
+const int TICKS_PER_SECOND = 25;
+const int SKIP_TICKS = 1000 / TICKS_PER_SECOND;
+const int MAX_FRAMESKIP = 5;
+
 int main(int argc, char *argv[]) {
     Main::Init();
 
+    unsigned int next_game_tick = SDL_GetTicks();
+    int loops;
+    float interpolation;
+
     while (Main::running) {
-        Main::Event();
-        Main::Tick();
-        Main::Render();
+        loops = 0;
+        while (SDL_GetTicks() > next_game_tick && loops < MAX_FRAMESKIP) {
+            Main::Event();
+            Main::Tick();
+            next_game_tick += SKIP_TICKS;
+            loops++;
+        }
+
+        interpolation = (SDL_GetTicks() + SKIP_TICKS - next_game_tick) / (float) SKIP_TICKS;
+        Main::Render(interpolation);
     }
 
     Main::Cleanup();
