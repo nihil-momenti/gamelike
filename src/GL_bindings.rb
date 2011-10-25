@@ -696,3 +696,4 @@ void glMaterialfv(GLenum, GLenum, const GLfloat*);
 void glMateriali(GLenum, GLenum, GLint);
 void glLightModeli(GLenum, GLint);
 void glColorMaterial(GLenum, GLenum);
+void glLineWidth(GLfloat);

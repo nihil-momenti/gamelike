@@ -49,6 +49,7 @@ namespace Main {
         glClearColor(0.9, 0.9, 0.9);
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
+        glLineWidth(3.0);
 
         Lights::init();
         Camera::init(width, height);

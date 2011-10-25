@@ -1,11 +1,11 @@
 #pragma once
 
-#include "chunk.hpp"
+#include "tile.hpp"
 
 #include <vector>
 
 struct World {
-    std::vector<Chunk> loaded_chunks;
+    Tile base_tile;
 
-    static World gen_random();
+    World();
 };
