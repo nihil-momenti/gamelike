@@ -3,7 +3,7 @@
 #include "world.hpp"
 #include "world_view.hpp"
 #include "camera.hpp"
-
+#include "lights.hpp"
 
 #include <cmath>
 
@@ -49,66 +49,11 @@ namespace Main {
         glLoadIdentity();
         Camera::look(interpolation);
 
+        Lights::display(interpolation);
+
         glCullFace(GL_BACK);
         glFrontFace(GL_CW);
         glPolygonMode(GL_FRONT, GL_FILL);
-        glColor4f(0.44, 0.31, 0.21, 1.0);
-
-        for (int x = -100; x < 100; x = x+10) {
-            for (int y = -100; y < 100; y = y+10) {
-                for (int z = -100; z < 100; z = z+10) {
-                    glBegin(GL_TRIANGLES);
-                        glColor3f(0, 1, 0); glVertex3f(x+1, y+1, z+1);
-                        glColor3f(0, 0, 1); glVertex3f(x+1, y+1, z-1);
-                        glColor3f(0, 1, 1); glVertex3f(x+1, y-1, z-1);
-
-                        glColor3f(0, 1, 1); glVertex3f(x+1, y-1, z-1);
-                        glColor3f(0.5, 1, 1); glVertex3f(x+1, y-1, z+1);
-                        glColor3f(0, 1, 0); glVertex3f(x+1, y+1, z+1);
-
-                        glColor3f(0, 1, 0); glVertex3f(x-1, y+1, z+1);
-                        glColor3f(0, 0, 1); glVertex3f(x-1, y-1, z+1);
-                        glColor3f(0, 1, 1); glVertex3f(x-1, y-1, z-1);
-
-                        glColor3f(0, 1, 1); glVertex3f(x-1, y-1, z-1);
-                        glColor3f(0.5, 1, 1); glVertex3f(x-1, y+1, z-1);
-                        glColor3f(0, 1, 0); glVertex3f(x-1, y+1, z+1);
-
-                        glColor3f(0, 1, 0); glVertex3f(x+1, y+1, z+1);
-                        glColor3f(0, 0, 1); glVertex3f(x+1, y-1, z+1);
-                        glColor3f(0, 1, 1); glVertex3f(x-1, y-1, z+1);
-
-                        glColor3f(0, 1, 1); glVertex3f(x-1, y-1, z+1);
-                        glColor3f(0.5, 1, 1); glVertex3f(x-1, y+1, z+1);
-                        glColor3f(0, 1, 0); glVertex3f(x+1, y+1, z+1);
-
-                        glColor3f(0, 1, 0); glVertex3f(x+1, y+1, z-1);
-                        glColor3f(0, 0, 1); glVertex3f(x-1, y+1, z-1);
-                        glColor3f(0, 1, 1); glVertex3f(x-1, y-1, z-1);
-
-                        glColor3f(0, 1, 1); glVertex3f(x-1, y-1, z-1);
-                        glColor3f(0.5, 1, 1); glVertex3f(x+1, y-1, z-1);
-                        glColor3f(0, 1, 0); glVertex3f(x+1, y+1, z-1);
-
-                        glColor3f(0, 1, 0); glVertex3f(x+1, y+1, z+1);
-                        glColor3f(0, 0, 1); glVertex3f(x-1, y+1, z+1);
-                        glColor3f(0, 1, 1); glVertex3f(x-1, y+1, z-1);
-
-                        glColor3f(0, 1, 1); glVertex3f(x-1, y+1, z-1);
-                        glColor3f(0.5, 1, 1); glVertex3f(x+1, y+1, z-1);
-                        glColor3f(0, 1, 0); glVertex3f(x+1, y+1, z+1);
-
-                        glColor3f(0, 1, 0); glVertex3f(x+1, y-1, z+1);
-                        glColor3f(0, 0, 1); glVertex3f(x+1, y-1, z-1);
-                        glColor3f(0, 1, 1); glVertex3f(x-1, y-1, z-1);
-
-                        glColor3f(0, 1, 1); glVertex3f(x-1, y-1, z-1);
-                        glColor3f(0.5, 1, 1); glVertex3f(x-1, y-1, z+1);
-                        glColor3f(0, 1, 0); glVertex3f(x+1, y-1, z+1);
-                    glEnd();
-                }
-            }
-        }
 
         wv.display();
 

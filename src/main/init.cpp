@@ -1,6 +1,7 @@
 #include "main.hpp"
 
 #include "camera.hpp"
+#include "lights.hpp"
 
 namespace Main {
     int width = 640,
@@ -49,6 +50,7 @@ namespace Main {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
 
+        Lights::init();
         Camera::init(width, height);
 
         glMatrixMode(GL_PROJECTION);

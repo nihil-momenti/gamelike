@@ -79,10 +79,10 @@ void WorldView::display() {
                         draw_cube(
                                 chunk.x * 10 + (i-0.5) / (float) CHUNK_SIZE * 10,
                                 chunk.x * 10 + (i+0.5) / (float) CHUNK_SIZE * 10,
+                                chunk.z * 10 + (k-0.5) / (float) CHUNK_HEIGHT * 10,
+                                chunk.z * 10 + (k+0.5) / (float) CHUNK_HEIGHT * 10,
                                 chunk.y * 10 + (j-0.5) / (float) CHUNK_SIZE * 10,
-                                chunk.y * 10 + (j+0.5) / (float) CHUNK_SIZE * 10,
-                                chunk.z * 10 + (k-0.5) / (float) CHUNK_SIZE * 10,
-                                chunk.z * 10 + (k+0.5) / (float) CHUNK_HEIGHT * 10
+                                chunk.y * 10 + (j+0.5) / (float) CHUNK_SIZE * 10
                         );
                     }
                 }

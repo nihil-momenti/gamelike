@@ -691,3 +691,8 @@ void glClearColor(GLclampf, GLclampf, GLclampf);
 void glEnable(GLenum);
 void glDisable(GLenum);
 void glFrontFace(GLenum);
+void glLightfv(GLenum, GLenum, const GLfloat*);
+void glMaterialfv(GLenum, GLenum, const GLfloat*);
+void glMateriali(GLenum, GLenum, GLint);
+void glLightModeli(GLenum, GLint);
+void glColorMaterial(GLenum, GLenum);
