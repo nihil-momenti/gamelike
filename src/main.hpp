@@ -7,6 +7,7 @@
 
 namespace Main {
     extern bool running;
+    extern int width, height;
 
     extern int sdl_init();
     extern int gl_init();

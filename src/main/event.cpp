@@ -89,8 +89,14 @@ namespace Main {
                     break;
 
                 case SDL_VIDEORESIZE:
-                    glClearColor(0.9, 0.9, 0.9);
-                    Camera::set_window(event.resize.w, event.resize.h);
+                    width = event.resize.w;
+                    height = event.resize.h;
+
+                    if (SDL_SetVideoMode(width, height, 0, SDL_OPENGL | SDL_RESIZABLE) == NULL) {
+                        Debug::error << "Set Video Mode Error: " << SDL_GetError() << std::endl;
+                        running = false;
+                    }
+                    gl_init();
                     break;
 
                 default:

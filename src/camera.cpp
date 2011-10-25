@@ -18,9 +18,7 @@ namespace Camera {
     static double speed = 0.01;
     static std::set<Direction> moving;
     static Uint32 last_update;
-    static int width = 640;
-    static int height = 480;
-    static double aspect = width / (double) height;
+    static double aspect = 0.0;
     static double fov = 50.0;
     static double near = 0.1;
     static double far = 100.0;
@@ -32,7 +30,9 @@ namespace Camera {
     static void forward(double);
     static void right(double);
 
-    void init() {
+    void init(int width, int height) {
+        aspect = width / (double) height;
+
         glViewport(0, 0, width, height);
     }
 
@@ -144,13 +144,5 @@ namespace Camera {
         Vector3 movement = amount * facing().cross(viewup).unit();
         position = position + movement;
         lookat = lookat + movement;
-    }
-
-    void set_window(int w, int h) {
-        width = w;
-        height = h;
-        aspect = width / (double) height;
-        std::cout << "Changed dimensions to [" << width << ',' << height << "]." << std::endl;
-        glViewport(0, 0, width, height);
     }
 }

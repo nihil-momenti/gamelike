@@ -3,6 +3,9 @@
 #include "camera.hpp"
 
 namespace Main {
+    int width = 640,
+        height = 480;
+
     int sdl_init() {
         if (SDL_Init( SDL_INIT_EVERYTHING ) != 0) {
             Debug::error << "SDL Initialisation Error: " << SDL_GetError() << std::endl;
@@ -46,7 +49,7 @@ namespace Main {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
 
-        Camera::init();
+        Camera::init(width, height);
 
         return 0;
     }
