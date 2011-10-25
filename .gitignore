@@ -3,3 +3,4 @@
 /.dep
 /src/GL_bindings.hpp
 /src/GL_bindings.cpp
+/local.mk

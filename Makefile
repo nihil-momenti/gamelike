@@ -17,6 +17,8 @@ CPPFLAGS = $(CFLAGS) $(ORIGINAL_CPPFLAGS)
 
 LDFLAGS += $(shell pkg-config --libs sdl)
 
+-include local.mk
+
 ###############################################################################
 
 C_FILES =  $(wildcard src/*.c)
