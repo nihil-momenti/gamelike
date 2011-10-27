@@ -116,5 +116,15 @@ void WorldView::gl_init() {}
 
 void WorldView::display() {
     glBegin(GL_TRIANGLES);
+    for (int i = -CHUNK_SIZE; i <= CHUNK_SIZE; i++) {
+        for (int j = -CHUNK_SIZE + abs(i); j <= CHUNK_SIZE - abs(i); j++) {
+            for (int k = -CHUNK_SIZE + abs(i) + abs(j); k <= CHUNK_SIZE - abs(i) - abs(j); k++) {
+                if (world.chunk(i, j, k, 0).type == 1) {
+                    glColor3b(10*(i+CHUNK_SIZE), 10*(j+CHUNK_SIZE), 10*(k+CHUNK_SIZE));
+                    draw_hexagonal_prism(M_R3_2*(j+k), i+j+k, i+0.5*(j+k), 1, 0.25774);
+                }
+            }
+        }
+    }
     glEnd();
 }

@@ -8,6 +8,7 @@
 #include <cmath>
 
 namespace Main {
+    World world;
     WorldView wv;
     bool running = true;
     bool sdl_initialized = false;
@@ -26,7 +27,6 @@ namespace Main {
             return;
         }
 
-        World world;
         wv = WorldView(world);
     }
 

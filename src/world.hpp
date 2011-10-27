@@ -1,11 +1,9 @@
 #pragma once
 
-#include "tile.hpp"
-
-#include <vector>
+#include "chunk.hpp"
 
 struct World {
-    Tile base_tile;
+    Chunk chunk;
 
     World();
 };
