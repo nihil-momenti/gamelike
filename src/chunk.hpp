@@ -2,7 +2,7 @@
 
 #include "block.hpp"
 
-static const int CHUNK_SIZE = 4;
+static const int CHUNK_SIZE = 7;
 static const int CHUNK_HEIGHT = 1;
 
 struct Chunk {
