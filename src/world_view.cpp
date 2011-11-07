@@ -116,15 +116,13 @@ WorldView::WorldView(World world)
 
 void WorldView::gl_init() {}
 
-void draw_block(Block &block, int i, int j, int k, int y) {
-    if (block.type == 1) {
-        glColor3ub(std::min(5*abs(i)*y, 255), std::min(5*abs(j)*y, 255), std::min(5*abs(k)*y, 255));
-        draw_hexagonal_prism(M_R3_2*(j+k), y, i+0.5*(j-k), 1, 0.5774);
-    }
-}
-
 void WorldView::display() {
     glBegin(GL_TRIANGLES);
-    world.chunk.each(draw_block);
+    for (BlockWrapper bw : world.chunk) {
+        if (bw.block.type == 1) {
+            glColor3ub(std::min(5*abs(bw.i)*bw.y, 255), std::min(5*abs(bw.j)*bw.y, 255), std::min(5*abs(bw.k)*bw.y, 255));
+            draw_hexagonal_prism(M_R3_2*(bw.j+bw.k), bw.y, bw.i+0.5*(bw.j-bw.k), 1, 0.5774);
+        }
+    }
     glEnd();
 }
