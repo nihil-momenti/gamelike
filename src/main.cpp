@@ -58,13 +58,6 @@ namespace Main {
         glColor3f(0.59, 0.29, 0);
         wv.display();
 
-        glCullFace(GL_FRONT);
-        glFrontFace(GL_CW);
-        glPolygonMode(GL_BACK, GL_LINE);
-
-        glColor3f(0.0, 0.0, 0);
-        wv.display();
-
         SDL_GL_SwapBuffers();
     }
 
