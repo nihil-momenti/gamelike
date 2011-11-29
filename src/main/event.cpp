@@ -46,7 +46,7 @@ namespace Main {
                         case SDLK_SPACE:
                             Camera::move(UP);
                             break;
-                        case SDLK_z:
+                        case SDLK_LSHIFT:
                             Camera::move(DOWN);
                             break;
                         case SDLK_ESCAPE:
@@ -74,7 +74,7 @@ namespace Main {
                         case SDLK_SPACE:
                             Camera::stop(UP);
                             break;
-                        case SDLK_z:
+                        case SDLK_LSHIFT:
                             Camera::stop(DOWN);
                             break;
                         default:
