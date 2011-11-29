@@ -7,6 +7,11 @@ end
 
 File.open 'src/GL_bindings.cpp', 'w' do |f|
   f.write <<-END
+/**
+ * DO NOT EDIT!
+ * This file is generated from #{__FILE__}.
+ */
+
 #include "GL_bindings.hpp"
 
 #include "debug.hpp"
@@ -34,6 +39,11 @@ end
 
 File.open 'src/GL_bindings.hpp', 'w' do |f|
   f.write <<-END
+/**
+ * DO NOT EDIT!
+ * This file is generated from #{__FILE__}.
+ */
+
 #pragma once
 
 #include <SDL.h>
