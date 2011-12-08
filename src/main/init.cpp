@@ -46,6 +46,8 @@ namespace Main {
             return 1;
         }
 
+        Debug::debug << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
+
         glClearColor(0.9, 0.9, 0.9);
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);

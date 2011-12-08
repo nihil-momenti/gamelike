@@ -1,7 +1,7 @@
 Func = Struct.new(:return, :name, :args)
 
 funcs = DATA.map do |func|
-  /([^\s]*)\s*([^(]*)\s*\(([^)]*)\);/ =~ func
+  /(.*?)\s+([^(\s]+)\s*\(([^)]*)\);/ =~ func
   Func.new($1, $2, $3)
 end
 
@@ -709,3 +709,4 @@ void glColorMaterial(GLenum, GLenum);
 void glLineWidth(GLfloat);
 void glColor3ub(GLubyte, GLubyte, GLubyte);
 void glColor3b(GLbyte, GLbyte, GLbyte);
+GLubyte * glGetString(GLenum);
