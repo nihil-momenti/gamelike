@@ -9,7 +9,7 @@
 
 namespace Main {
     World world;
-    WorldView wv;
+    WorldView wv(world);
     bool running = true;
     bool sdl_initialized = false;
 
@@ -27,7 +27,7 @@ namespace Main {
             return;
         }
 
-        wv = WorldView(world);
+        wv.gl_init();
     }
 
     void Event() {
@@ -73,7 +73,6 @@ const int SKIP_TICKS = 1000 / TICKS_PER_SECOND;
 const int MAX_FRAMESKIP = 5;
 
 int main(int argc, char *argv[]) {
-    exit(0);
     Main::Init();
 
     unsigned int next_game_tick = SDL_GetTicks();
