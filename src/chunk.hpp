@@ -1,10 +1,12 @@
 #pragma once
 
+#include <algorithm>
+
 #include "block.hpp"
 #include "chunk_iterator.hpp"
 
-static const int CHUNK_SIZE = 16;
-static const int CHUNK_HEIGHT = 16;
+static const int CHUNK_SIZE = 2;
+static const int CHUNK_HEIGHT = 1;
 
 class Chunk {
     public:

@@ -135,7 +135,7 @@ void WorldView::display() {
         }
 
         if (bw.block.type != 0) {
-            draw_hexagonal_prism(M_R3_2*(bw.j+bw.k), bw.y, bw.i+0.5*(bw.j-bw.k), 1, 0.5774);
+            draw_hexagonal_prism(M_R3_2*(bw.j+bw.k), bw.y*M_R3_2, bw.i+0.5*(bw.j-bw.k), M_R3_2, 0.5774);
         }
     }
     glEnd();

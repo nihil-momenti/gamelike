@@ -5,8 +5,8 @@
 class BlockWrapper {
     public:
         Block &block;
-        int i, j, k, y;
+        int i, j, k, y, index;
 
-        BlockWrapper(Block &block, int i, int j, int k, int y)
-            : block(block), i(i), j(j), k(k), y(y) { };
+        BlockWrapper(Block &block, int i, int j, int k, int y, int index)
+            : block(block), i(i), j(j), k(k), y(y), index(index) { };
 };

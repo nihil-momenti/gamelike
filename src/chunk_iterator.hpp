@@ -19,7 +19,9 @@ class ChunkIterator {
     private:
         Chunk *chunk;
 
-        int i, j, k, y, n, side, l, index;
+        int index(int, int, int, int);
+
+        int i, j, k, y, n, side, l;
 };
 
 #include "chunk.hpp"

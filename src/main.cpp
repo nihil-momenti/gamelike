@@ -73,6 +73,7 @@ const int SKIP_TICKS = 1000 / TICKS_PER_SECOND;
 const int MAX_FRAMESKIP = 5;
 
 int main(int argc, char *argv[]) {
+    exit(0);
     Main::Init();
 
     unsigned int next_game_tick = SDL_GetTicks();
