@@ -12,11 +12,11 @@ typedef enum {
 } Direction;
 
 namespace Camera {
-    extern void init(int, int);
-    extern void move(Direction);
-    extern void stop(Direction);
-    extern void turn(double, double);
-    extern void tick();
-    extern void look(double);
-    extern void perspective();
+    void init(int, int);
+    void move(Direction);
+    void stop(Direction);
+    void turn(double, double);
+    void tick();
+    void look(double);
+    void perspective();
 }

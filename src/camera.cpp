@@ -22,13 +22,6 @@ namespace Camera {
     static double near = 0.1;
     static double far = 100.0;
 
-
-    static Vector3 side();
-    static Vector3 facing();
-    static void up(double);
-    static void forward(double);
-    static void right(double);
-
     void init(int width, int height) {
         aspect = width / (double) height;
 
@@ -43,36 +36,18 @@ namespace Camera {
         moving.erase(direction);
     }
 
-    void tick() {
-        if (moving.empty()) {
-            return;
-        }
+    Vector3 facing() {
+        return (lookat - position).unit();
+    }
 
-#if __cplusplus > 199711L
-        for (const Direction &dir : moving) {
-#else
-        for (std::set<Direction>::const_iterator it = moving.begin(); it != moving.end(); it++) {
-            const Direction &dir = *it;
-#endif
-            switch (dir) {
-                case FORWARD:  forward(speed);  break;
-                case BACK:     forward(-speed); break;
-                case RIGHT:    right(speed);    break;
-                case LEFT:     right(-speed);   break;
-                case UP:       up(speed);       break;
-                case DOWN:     up(-speed);      break;
-            }
-        }
+    Vector3 side() {
+        return facing().cross(viewup).unit();
     }
 
     void look(double interpolation) {
         Vector3 up = side().cross(facing()).unit();
 
         GLdouble M[16] = {
-        //    side().dx,     side().dy,     side().dz,     0.0,
-        //    up.dx,         up.dy,         up.dz,         0.0,
-        //    -facing().dx,  -facing().dy,  -facing().dz,  0.0,
-        //    0.0,           0.0,           0.0,           1.0
             side().dx,      up.dx,      -facing().dx,       0.0,
             side().dy,      up.dy,      -facing().dy,       0.0,
             side().dz,      up.dz,      -facing().dz,       0.0,
@@ -81,12 +56,6 @@ namespace Camera {
 
         glMultMatrixd(M);
         glTranslated(-position.x, -position.y, -position.z);
-
-        //gluLookAt(
-        //    position.x, position.y, position.z,
-        //    lookat.x,   lookat.y,   lookat.z,
-        //    viewup.dx,  viewup.dy,  viewup.dz
-        //);
     }
 
     void perspective() {
@@ -124,12 +93,12 @@ namespace Camera {
         lookat = position + Vector3(x, y, z).unit();
     }
 
-    Vector3 facing() {
-        return (lookat - position).unit();
+    Vector3 forward() {
+        return Vector3(facing().dx, 0, facing().dz).unit();
     }
 
-    Vector3 side() {
-        return facing().cross(viewup).unit();
+    Vector3 right() {
+        return forward().cross(viewup).unit();
     }
 
     void up(double amount) {
@@ -139,14 +108,31 @@ namespace Camera {
     }
 
     void forward(double amount) {
-        Vector3 movement = amount * facing();
+        Vector3 movement = amount * forward();
         position = position + movement;
         lookat = lookat + movement;
     }
 
     void right(double amount) {
-        Vector3 movement = amount * side();
+        Vector3 movement = amount * right();
         position = position + movement;
         lookat = lookat + movement;
+    }
+
+    void tick() {
+        if (moving.empty()) {
+            return;
+        }
+
+        for (const Direction &dir : moving) {
+            switch (dir) {
+                case FORWARD:  forward(speed);  break;
+                case BACK:     forward(-speed); break;
+                case RIGHT:    right(speed);    break;
+                case LEFT:     right(-speed);   break;
+                case UP:       up(speed);       break;
+                case DOWN:     up(-speed);      break;
+            }
+        }
     }
 }
