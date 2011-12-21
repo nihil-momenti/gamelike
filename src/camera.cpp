@@ -1,26 +1,25 @@
 #include "camera.hpp"
 
-#include "debug.hpp"
-
 #include <SDL.h>
 #include "GL_bindings.hpp"
 
-#include <set>
-
-#include <cstdlib>
 #include <cmath>
 
 namespace Camera {
-    static Point3 position(0, 0, 3);
-    static Point3 lookat(0, 0, 2);
-    static Vector3 viewup(0, 1, 0);
-    static double sensitivity = 0.001;
-    static double speed = 1.0;
-    static std::set<Direction> moving;
-    static double aspect = 0.0;
-    static double fov = 50.0;
-    static double near = 0.1;
-    static double far = 100.0;
+    static Point3 position(0, 0, 3),
+                    lookat(0, 0, 2);
+    static Vector3  viewup(0, 1, 0);
+
+    static double  sensitivity =   0.001,
+                   speed       =   1.0,
+                   aspect      =   0.0,
+                   fov         =  50.0,
+                   near        =   0.1,
+                   far         = 100.0;
+
+    // TODO: Find out how to make this Direction, do I need to overload |= or
+    // something?
+    static int moving;
 
     void init(int width, int height) {
         aspect = width / (double) height;
@@ -29,29 +28,23 @@ namespace Camera {
     }
 
     void move(Direction direction) {
-        moving.insert(direction);
+        moving |= direction;
     }
 
     void stop(Direction direction) {
-        moving.erase(direction);
-    }
-
-    Vector3 facing() {
-        return (lookat - position).unit();
-    }
-
-    Vector3 side() {
-        return facing().cross(viewup).unit();
+        moving &= ~direction;
     }
 
     void look(double interpolation) {
-        Vector3 up = side().cross(facing()).unit();
+        Vector3 facing = (lookat - position).unit(),
+                side   = facing.cross(viewup).unit(),
+                up     = side.cross(facing).unit();
 
         GLdouble M[16] = {
-            side().dx,      up.dx,      -facing().dx,       0.0,
-            side().dy,      up.dy,      -facing().dy,       0.0,
-            side().dz,      up.dz,      -facing().dz,       0.0,
-            0.0,            0.0,        0.0,                1.0
+            side.dx, up.dx, -facing.dx, 0.0,
+            side.dy, up.dy, -facing.dy, 0.0,
+            side.dz, up.dz, -facing.dz, 0.0,
+            0.0,     0.0,   0.0,        1.0
         };
 
         glMultMatrixd(M);
@@ -59,7 +52,7 @@ namespace Camera {
     }
 
     void perspective() {
-        double f = tan(M_PI_2 - fov * M_PI / 180 / 2);
+        double f = tan(M_PI_2 - fov * (M_PI / 180) / 2);
 
         GLdouble M[16] = {
             f / aspect, 0.0,    0.0,                                 0.0,
@@ -72,7 +65,7 @@ namespace Camera {
     }
 
     void turn(double horizontal, double vertical) {
-        Vector3 original_look = facing();
+        Vector3 original_look = (lookat - position).unit();
 
         double x = original_look.dx;
         double y = original_look.dy;
@@ -94,17 +87,12 @@ namespace Camera {
     }
 
     Vector3 forward() {
-        return Vector3(facing().dx, 0, facing().dz).unit();
+        Vector3 facing = (lookat - position).unit();
+        return Vector3(facing.dx, 0, facing.dz).unit();
     }
 
     Vector3 right() {
         return forward().cross(viewup).unit();
-    }
-
-    void up(double amount) {
-        Vector3 movement = amount * viewup;
-        position = position + movement;
-        lookat = lookat + movement;
     }
 
     void forward(double amount) {
@@ -119,20 +107,18 @@ namespace Camera {
         lookat = lookat + movement;
     }
 
-    void tick() {
-        if (moving.empty()) {
-            return;
-        }
+    void up(double amount) {
+        Vector3 movement = amount * viewup;
+        position = position + movement;
+        lookat = lookat + movement;
+    }
 
-        for (const Direction &dir : moving) {
-            switch (dir) {
-                case FORWARD:  forward(speed);  break;
-                case BACK:     forward(-speed); break;
-                case RIGHT:    right(speed);    break;
-                case LEFT:     right(-speed);   break;
-                case UP:       up(speed);       break;
-                case DOWN:     up(-speed);      break;
-            }
-        }
+    void tick() {
+        if (moving & FORWARD) { forward(speed);  }
+        if (moving & BACK)    { forward(-speed); }
+        if (moving & RIGHT)   { right(speed);    }
+        if (moving & LEFT)    { right(-speed);   }
+        if (moving & UP)      { up(speed);       }
+        if (moving & DOWN)    { up(-speed);      }
     }
 }
