@@ -1,6 +1,7 @@
 #include "main.hpp"
 
 #include "camera.hpp"
+#include "controls.hpp"
 
 
 namespace Main {
@@ -19,88 +20,48 @@ namespace Main {
     }
 
     void handle_event(SDL_Event event) {
-            switch (event.type) {
-                case SDL_QUIT:
+        switch (event.type) {
+            case SDL_QUIT:
+                running = false;
+                return;
+
+            case SDL_KEYDOWN:
+                switch (event.key.keysym.sym) {
+                    case SDLK_q:
+                        if (event.key.keysym.mod & KMOD_META) {
+                            running = false;
+                            return;
+                        }
+                        break;
+                    case SDLK_ESCAPE:
+                        toggle_grab();
+                        return;
+                    default:
+                        break;
+                }
+                break;
+
+            case SDL_MOUSEMOTION:
+                if (grabbed) {
+                    Camera::turn(event.motion.xrel, event.motion.yrel);
+                }
+                return;
+
+            case SDL_VIDEORESIZE:
+                width = event.resize.w;
+                height = event.resize.h;
+
+                if (SDL_SetVideoMode(width, height, 0, SDL_OPENGL | SDL_RESIZABLE) == NULL) {
+                    Debug::error << "Set Video Mode Error: " << SDL_GetError() << std::endl;
                     running = false;
-                    break;
+                }
+                gl_init();
+                return;
 
-                case SDL_KEYDOWN:
-                    switch (event.key.keysym.sym) {
-                        case SDLK_q:
-                            if ((event.key.keysym.mod & KMOD_META) != 0) {
-                                running = false;
-                            }
-                            break;
-                        case SDLK_w:
-                            Camera::move(FORWARD);
-                            break;
-                        case SDLK_a:
-                            Camera::move(LEFT);
-                            break;
-                        case SDLK_s:
-                            Camera::move(BACK);
-                            break;
-                        case SDLK_d:
-                            Camera::move(RIGHT);
-                            break;
-                        case SDLK_SPACE:
-                            Camera::move(UP);
-                            break;
-                        case SDLK_LSHIFT:
-                            Camera::move(DOWN);
-                            break;
-                        case SDLK_ESCAPE:
-                            toggle_grab();
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
+            default:
+                break;
+        }
 
-                case SDL_KEYUP:
-                    switch (event.key.keysym.sym) {
-                        case SDLK_w:
-                            Camera::stop(FORWARD);
-                            break;
-                        case SDLK_a:
-                            Camera::stop(LEFT);
-                            break;
-                        case SDLK_s:
-                            Camera::stop(BACK);
-                            break;
-                        case SDLK_d:
-                            Camera::stop(RIGHT);
-                            break;
-                        case SDLK_SPACE:
-                            Camera::stop(UP);
-                            break;
-                        case SDLK_LSHIFT:
-                            Camera::stop(DOWN);
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
-
-                case SDL_MOUSEMOTION:
-                    if (grabbed) {
-                        Camera::turn(event.motion.xrel, event.motion.yrel);
-                    }
-                    break;
-
-                case SDL_VIDEORESIZE:
-                    width = event.resize.w;
-                    height = event.resize.h;
-
-                    if (SDL_SetVideoMode(width, height, 0, SDL_OPENGL | SDL_RESIZABLE) == NULL) {
-                        Debug::error << "Set Video Mode Error: " << SDL_GetError() << std::endl;
-                        running = false;
-                    }
-                    gl_init();
-                    break;
-
-                default:
-                    break;
-            }
+        Controls::handle_event(event);
     }
 }
