@@ -113,7 +113,7 @@ void ChunkView::gl_init() {
     list = glGenLists(1);
     glNewList(list, GL_COMPILE);
     glPushMatrix();
-    glTranslated((2*CHUNK_SIZE-1)*(chunk->i+0.5*(chunk->j-chunk->k)), M_R3_2*CHUNK_HEIGHT*chunk->y, M_R3_2*(2*CHUNK_SIZE-1)*(chunk->j+chunk->k));
+    glTranslated((2*CHUNK_SIZE-2)*(chunk->i+0.5*(chunk->j-chunk->k))-.5*M_R3_2*(chunk->j+chunk->k), M_R3_2*CHUNK_HEIGHT*chunk->y, M_R3_2*(2*CHUNK_SIZE-2)*(chunk->j+chunk->k)-.5*(chunk->i+.5*(chunk->j-chunk->k)));
     glBegin(GL_TRIANGLES);
     for (BlockWrapper bw : *chunk) {
         switch (bw.block.type) {
