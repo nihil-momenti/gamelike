@@ -112,6 +112,8 @@ ChunkView::ChunkView(Chunk *chunk)
 void ChunkView::gl_init() {
     list = glGenLists(1);
     glNewList(list, GL_COMPILE);
+    glPushMatrix();
+    glTranslated((2*CHUNK_SIZE-1)*(chunk->i+0.5*(chunk->j-chunk->k)), M_R3_2*CHUNK_HEIGHT*chunk->y, M_R3_2*(2*CHUNK_SIZE-1)*(chunk->j+chunk->k));
     glBegin(GL_TRIANGLES);
     for (BlockWrapper bw : *chunk) {
         switch (bw.block.type) {
@@ -130,10 +132,11 @@ void ChunkView::gl_init() {
         }
 
         if (bw.block.type != 0) {
-            draw_hexagonal_prism(M_R3_2*(bw.j+bw.k), bw.y*M_R3_2, bw.i+0.5*(bw.j-bw.k), M_R3_2, 0.5774);
+            draw_hexagonal_prism(M_R3_2*(bw.j+bw.k), M_R3_2*bw.y, bw.i+0.5*(bw.j-bw.k), M_R3_2, 0.5774);
         }
     }
     glEnd();
+    glPopMatrix();
     glEndList();
 }
 

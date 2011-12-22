@@ -12,11 +12,13 @@ class Chunk {
     public:
         typedef ChunkIterator iterator;
 
-        Chunk();
+        Chunk(int, int, int, int);
         ~Chunk();
 
         iterator begin();
         iterator end();
+
+        int i, j, k, y;
 
     private:
         // 1 + 6 + 2*6 + 3*6 + ... * n*6

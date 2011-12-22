@@ -5,11 +5,12 @@
 #include <cstdlib>
 #include <cmath>
 
-Chunk::Chunk() {
+Chunk::Chunk(int i, int j, int k, int y) 
+        : i(i), j(j), k(k), y(y) {
     blocks = new Block[(1 + 3*CHUNK_SIZE*(CHUNK_SIZE+1))*CHUNK_HEIGHT];
     for (BlockWrapper bw : (*this)) {
-        std::cout << "Created hex [" << bw.i << ", " << bw.j << ", " << bw.k << ", (" << bw.y << ")] at index [" << bw.index << "]." << std::endl;
-        bw.block.type = int(rand() % 5);
+        //bw.block.type = int(rand() % 5);
+        bw.block.type = (i+2*j+3*k+4*y)%4+1;
     }
 }
 

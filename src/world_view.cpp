@@ -18,10 +18,15 @@ void WorldView::gl_init() {
     for (ChunkView *chunk_view : chunk_views) {
         chunk_view->gl_init();
     }
-}
 
-void WorldView::display() {
+    list = glGenLists(1);
+    glNewList(list, GL_COMPILE);
     for (ChunkView *chunk_view : chunk_views) {
         chunk_view->display();
     }
+    glEndList();
+}
+
+void WorldView::display() {
+    glCallList(list);
 }

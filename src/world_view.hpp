@@ -4,16 +4,20 @@
 
 #include "chunk_view.hpp"
 
-#include <SDL.h>
+#include "GL_bindings.hpp"
+
 #include <vector>
 
 struct WorldView {
-    World *world;
-    std::vector<ChunkView*> chunk_views;
+    public:
+        World *world;
+        std::vector<ChunkView*> chunk_views;
 
-    WorldView(World *world);
-    ~WorldView();
+        WorldView(World *world);
+        ~WorldView();
 
-    void gl_init();
-    void display();
+        void gl_init();
+        void display();
+    private:
+        GLuint list;
 };
