@@ -2,8 +2,11 @@
 
 #include "chunk.hpp"
 
+#include <vector>
+
 struct World {
-    Chunk chunk;
+    std::vector<Chunk*> chunks;
 
     World();
+    ~World();
 };

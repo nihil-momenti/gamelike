@@ -4,9 +4,9 @@
 #include "chunk.hpp"
 
 struct ChunkView {
-    Chunk &chunk;
+    Chunk *chunk;
 
-    ChunkView(Chunk &chunk);
+    ChunkView(Chunk *chunk);
 
     GLuint list;
 

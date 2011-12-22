@@ -105,7 +105,7 @@ static void draw_hexagonal_prism(float x, float y, float z, float height, float 
     glVertex3f(x + radius,      y - height / 2,     z                   );
     glVertex3f(x + radius/2,    y - height / 2,     z + M_R3_2 * radius );
 }
-ChunkView::ChunkView(Chunk &chunk)
+ChunkView::ChunkView(Chunk *chunk)
     : chunk(chunk) {
 }
 
@@ -113,7 +113,7 @@ void ChunkView::gl_init() {
     list = glGenLists(1);
     glNewList(list, GL_COMPILE);
     glBegin(GL_TRIANGLES);
-    for (BlockWrapper bw : chunk) {
+    for (BlockWrapper bw : *chunk) {
         switch (bw.block.type) {
             case 1:
                 glColor3ub(150, 75, 0);
