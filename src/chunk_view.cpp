@@ -110,9 +110,8 @@ ChunkView::ChunkView(Chunk &chunk)
 }
 
 void ChunkView::gl_init() {
-}
-
-void ChunkView::display() {
+    list = glGenLists(1);
+    glNewList(list, GL_COMPILE);
     glBegin(GL_TRIANGLES);
     for (BlockWrapper bw : chunk) {
         switch (bw.block.type) {
@@ -135,4 +134,9 @@ void ChunkView::display() {
         }
     }
     glEnd();
+    glEndList();
+}
+
+void ChunkView::display() {
+    glCallList(list);
 }

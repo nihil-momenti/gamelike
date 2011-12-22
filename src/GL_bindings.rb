@@ -710,3 +710,7 @@ void glLineWidth(GLfloat);
 void glColor3ub(GLubyte, GLubyte, GLubyte);
 void glColor3b(GLbyte, GLbyte, GLbyte);
 GLubyte * glGetString(GLenum);
+GLuint glGenLists(GLsizei);
+GLuint glNewList(GLuint, GLenum);
+void glEndList();
+GLuint glCallList(GLuint);
