@@ -7,10 +7,10 @@
 #include <SDL.h>
 
 struct WorldView {
-    World world;
+    World *world;
     ChunkView chunkView;
 
-    WorldView(World &world);
+    WorldView(World *world);
 
     void gl_init();
     void display();

@@ -1,7 +1,7 @@
 #include "world_view.hpp"
 
-WorldView::WorldView(World &world)
-    : world(world), chunkView(world.chunk)
+WorldView::WorldView(World *world)
+    : world(world), chunkView(world->chunk)
 {
 }
 

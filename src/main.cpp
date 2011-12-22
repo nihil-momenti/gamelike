@@ -8,8 +8,8 @@
 #include <cmath>
 
 namespace Main {
-    World world;
-    WorldView wv(world);
+    World *world;
+    WorldView *wv;
     bool running = true;
     bool sdl_initialized = false;
 
@@ -27,7 +27,10 @@ namespace Main {
             return;
         }
 
-        wv.gl_init();
+        world = new World();
+        wv = new WorldView(world);
+
+        wv->gl_init();
     }
 
     void Event() {
@@ -56,12 +59,20 @@ namespace Main {
         glPolygonMode(GL_FRONT, GL_FILL);
 
         glColor3f(0.59, 0.29, 0);
-        wv.display();
+        wv->display();
 
         SDL_GL_SwapBuffers();
     }
 
     void Cleanup() {
+        if (wv) {
+            delete wv;
+        }
+
+        if (world) {
+            delete world;
+        }
+
         if (sdl_initialized) {
             SDL_Quit();
         }
