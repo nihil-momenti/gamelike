@@ -11,6 +11,9 @@
 
 const int TICKS_PER_SECOND = 25;
 const int SKIP_TICKS = 1000 / TICKS_PER_SECOND;
+const int MAX_FRAMESKIP = 2;
+
+SDL_sem *update_semaphore;
 
 namespace Main {
     World *world;
@@ -47,7 +50,6 @@ namespace Main {
     }
 
     void Tick() {
-        Camera::tick();
     }
 
     void Render(double interpolation) {
@@ -83,14 +85,10 @@ namespace Main {
         }
     }
 
-    unsigned int next_game_tick;
-    unsigned int current_tick;
-
     int UpdateThread(void *unused) {
         while (Main::running) {
-            if (current_tick > next_game_tick) {
+            if (SDL_SemWait(update_semaphore) == 0) {
                 Main::Tick();
-                next_game_tick += SKIP_TICKS;
             }
         }
 
@@ -101,18 +99,26 @@ namespace Main {
 int main(int argc, char *argv[]) {
     Main::Init();
 
-    Main::next_game_tick = SDL_GetTicks();
-    Main::current_tick = Main::next_game_tick - 1;
-
+    update_semaphore = SDL_CreateSemaphore(0);
     SDL_Thread *update_thread = SDL_CreateThread(Main::UpdateThread, NULL);
 
+    unsigned int next_game_tick = SDL_GetTicks();
+    unsigned int loops = 0;
+
     while (Main::running) {
-        Main::current_tick = SDL_GetTicks();
-        Main::Event();
-        float interpolation = (Main::current_tick + SKIP_TICKS - Main::next_game_tick) / (float) SKIP_TICKS;
+        loops = 0;
+        while (SDL_GetTicks() > next_game_tick && loops < MAX_FRAMESKIP) {
+            Main::Event();
+            Camera::tick();
+            next_game_tick += SKIP_TICKS;
+            SDL_SemPost(update_semaphore);
+            loops++;
+        }
+        float interpolation = (SDL_GetTicks() + SKIP_TICKS - next_game_tick) / (float) SKIP_TICKS;
         Main::Render(interpolation);
     }
 
+    SDL_SemPost(update_semaphore);
     SDL_WaitThread(update_thread, NULL);
 
     Main::Cleanup();
