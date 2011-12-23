@@ -7,6 +7,11 @@
 
 #include <cmath>
 
+#include <SDL_thread.h>
+
+const int TICKS_PER_SECOND = 25;
+const int SKIP_TICKS = 1000 / TICKS_PER_SECOND;
+
 namespace Main {
     World *world;
     WorldView *wv;
@@ -77,31 +82,38 @@ namespace Main {
             SDL_Quit();
         }
     }
-}
 
-const int TICKS_PER_SECOND = 25;
-const int SKIP_TICKS = 1000 / TICKS_PER_SECOND;
-const int MAX_FRAMESKIP = 5;
+    unsigned int next_game_tick;
+    unsigned int current_tick;
+
+    int UpdateThread(void *unused) {
+        while (Main::running) {
+            if (current_tick > next_game_tick) {
+                Main::Tick();
+                next_game_tick += SKIP_TICKS;
+            }
+        }
+
+        return 0;
+    }
+}
 
 int main(int argc, char *argv[]) {
     Main::Init();
 
-    unsigned int next_game_tick = SDL_GetTicks();
-    int loops;
-    float interpolation;
+    Main::next_game_tick = SDL_GetTicks();
+    Main::current_tick = Main::next_game_tick - 1;
+
+    SDL_Thread *update_thread = SDL_CreateThread(Main::UpdateThread, NULL);
 
     while (Main::running) {
-        loops = 0;
-        while (SDL_GetTicks() > next_game_tick && loops < MAX_FRAMESKIP) {
-            Main::Event();
-            Main::Tick();
-            next_game_tick += SKIP_TICKS;
-            loops++;
-        }
-
-        interpolation = (SDL_GetTicks() + SKIP_TICKS - next_game_tick) / (float) SKIP_TICKS;
+        Main::current_tick = SDL_GetTicks();
+        Main::Event();
+        float interpolation = (Main::current_tick + SKIP_TICKS - Main::next_game_tick) / (float) SKIP_TICKS;
         Main::Render(interpolation);
     }
+
+    SDL_WaitThread(update_thread, NULL);
 
     Main::Cleanup();
 
