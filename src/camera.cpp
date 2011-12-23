@@ -23,16 +23,10 @@ namespace Camera {
     static int to_move;
     static int to_stop;
 
-    static SDL_mutex *move_mutex;
-    static SDL_mutex *pos_mutex;
-
     void init(int width, int height) {
         aspect = width / (double) height;
 
         glViewport(0, 0, width, height);
-
-        move_mutex = SDL_CreateMutex();
-        pos_mutex = SDL_CreateMutex();
     }
 
     Vector3 forward() {
@@ -59,37 +53,29 @@ namespace Camera {
     Vector3 movement(double interpolation) {
         Vector3 current_movement;
 
-        SDL_LockMutex(move_mutex);
         if (moving & FORWARD) { current_movement += forward(speed * interpolation);  }
         if (moving & BACK)    { current_movement += forward(-speed * interpolation); }
         if (moving & RIGHT)   { current_movement += right(speed * interpolation);    }
         if (moving & LEFT)    { current_movement += right(-speed * interpolation);   }
         if (moving & UP)      { current_movement += up(speed * interpolation);       }
         if (moving & DOWN)    { current_movement += up(-speed * interpolation);      }
-        SDL_UnlockMutex(move_mutex);
 
         return current_movement;
     }
 
     void move(Direction direction) {
-        SDL_LockMutex(move_mutex);
         to_move |= direction;
-        SDL_UnlockMutex(move_mutex);
     }
 
     void stop(Direction direction) {
-        SDL_LockMutex(move_mutex);
         to_stop |= direction;
-        SDL_UnlockMutex(move_mutex);
     }
 
     void look(double interpolation) {
-        SDL_LockMutex(pos_mutex);
-            Vector3 facing = (lookat - position).unit(),
-                    side   = facing.cross(viewup).unit(),
-                    up     = side.cross(facing).unit();
-            Point3 current_position = position + movement(interpolation);
-        SDL_UnlockMutex(pos_mutex);
+        Vector3 facing = (lookat - position).unit(),
+                side   = facing.cross(viewup).unit(),
+                up     = side.cross(facing).unit();
+        Point3 current_position = position + movement(interpolation);
 
         GLdouble M[16] = {
             side.dx, up.dx, -facing.dx, 0.0,
@@ -116,9 +102,7 @@ namespace Camera {
     }
 
     void turn(double horizontal, double vertical) {
-        SDL_LockMutex(pos_mutex);
         Vector3 original_look = (lookat - position).unit();
-        SDL_UnlockMutex(pos_mutex);
 
         double x = original_look.dx;
         double y = original_look.dy;
@@ -136,22 +120,16 @@ namespace Camera {
         y = r * cos(theta);
         z = r * sin(theta) * sin(phi);
 
-        SDL_LockMutex(pos_mutex);
         lookat = position + Vector3(x, y, z).unit();
-        SDL_UnlockMutex(pos_mutex);
     }
 
     void tick() {
         Vector3 current_movement = movement(1.0);
 
-        SDL_LockMutex(pos_mutex);
         position = position + current_movement;
         lookat = lookat + current_movement;
-        SDL_UnlockMutex(pos_mutex);
 
-        SDL_LockMutex(move_mutex);
         moving = (moving | to_move) & ~to_stop;
         to_move = to_stop = 0;
-        SDL_UnlockMutex(move_mutex);
     }
 }
