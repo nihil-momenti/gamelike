@@ -53,19 +53,19 @@ namespace Main {
     }
 
     void Render(double interpolation) {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        GL::Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
+        GL::MatrixMode(GL_MODELVIEW);
+        GL::LoadIdentity();
         Camera::look(interpolation);
 
         Lights::display(interpolation);
 
-        glCullFace(GL_BACK);
-        glFrontFace(GL_CW);
-        glPolygonMode(GL_FRONT, GL_FILL);
+        GL::CullFace(GL_BACK);
+        GL::FrontFace(GL_CW);
+        GL::PolygonMode(GL_FRONT, GL_FILL);
 
-        glColor3f(0.59, 0.29, 0);
+        GL::Color3f(0.59, 0.29, 0);
         wv->display();
 
         SDL_GL_SwapWindow(window);

@@ -1,7 +1,7 @@
 Func = Struct.new(:return, :name, :args)
 
 funcs = DATA.map do |func|
-  /(.*?)\s+([^(\s]+)\s*\(([^)]*)\);/ =~ func
+  /(.*?)\s+gl([^(\s]+)\s*\(([^)]*)\);/ =~ func
   Func.new($1, $2, $3)
 end
 
@@ -16,23 +16,25 @@ File.open 'src/GL_bindings.cpp', 'w' do |f|
 
 #include "debug.hpp"
 
-#{ funcs.map { |func| "#{func.name}Proc #{func.name} = NULL;" }.join "\n" }
+namespace GL {
+    #{ funcs.map { |func| "    #{func.name}Proc #{func.name} = NULL;" }.join "\n" }
 
-int GL_Bindings::init() {
-    int result = 0;
+    int init_bindings() {
+        int result = 0;
 
-#{
-  funcs.map do |func|
-    <<-IEND
-    #{func.name} = (#{func.name}Proc) SDL_GL_GetProcAddress("#{func.name}");
-    if (#{func.name} == NULL) {
-        result += 1;
-        Debug::error << "Unable to find function: #{func.name}" << std::endl;
+    #{
+      funcs.map do |func|
+        <<-IEND
+        #{func.name} = (#{func.name}Proc) SDL_GL_GetProcAddress("gl#{func.name}");
+        if (#{func.name} == NULL) {
+            result += 1;
+            Debug::error << "Unable to find function: #{func.name}" << std::endl;
+        }
+        IEND
+      end.join "\n"
     }
-    IEND
-  end.join "\n"
-}
-    return result;
+        return result;
+    }
 }
   END
 end
@@ -672,12 +674,12 @@ typedef double          GLclampd;       /* double precision float in [0,1] */
 #define GL_ALL_CLIENT_ATTRIB_BITS               0xFFFFFFFF
 #define GL_CLIENT_ALL_ATTRIB_BITS               0xFFFFFFFF
 
-#{ funcs.map { |func| "typedef #{func.return} (*#{func.name}Proc) (#{func.args});" }.join "\n" }
+namespace GL {
+    #{ funcs.map { |func| "    typedef #{func.return} (*#{func.name}Proc) (#{func.args});" }.join "\n" }
 
-#{ funcs.map { |func| %Q[extern "C" #{func.name}Proc #{func.name};] }.join "\n" }
-
-namespace GL_Bindings {
-  int init();
+    #{ funcs.map { |func| %Q[    extern "C" #{func.name}Proc #{func.name};] }.join "\n" }
+    #
+    int init_bindings();
 }
   END
 end

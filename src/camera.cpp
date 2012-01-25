@@ -26,7 +26,7 @@ namespace Camera {
     void init(int width, int height) {
         aspect = width / (double) height;
 
-        glViewport(0, 0, width, height);
+        GL::Viewport(0, 0, width, height);
     }
 
     Vector3 forward() {
@@ -84,8 +84,8 @@ namespace Camera {
             0.0,     0.0,   0.0,        1.0
         };
 
-        glMultMatrixd(M);
-        glTranslated(-current_position.x, -current_position.y, -current_position.z);
+        GL::MultMatrixd(M);
+        GL::Translated(-current_position.x, -current_position.y, -current_position.z);
     }
 
     void perspective() {
@@ -98,7 +98,7 @@ namespace Camera {
             0.0,        0.0,    (2 * far * near) / (near - far),     0.0
         };
 
-        glMultMatrixd(M);
+        GL::MultMatrixd(M);
     }
 
     void turn(double horizontal, double vertical) {

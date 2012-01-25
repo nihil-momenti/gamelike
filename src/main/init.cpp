@@ -52,23 +52,23 @@ namespace Main {
     }
 
     int gl_init() {
-        if (GL_Bindings::init() != 0) {
+        if (GL::init_bindings() != 0) {
             Debug::error << "Error loading OpenGL functions." << std::endl;
             return 1;
         }
 
-        Debug::debug << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
+        Debug::debug << "OpenGL version: " << GL::GetString(GL_VERSION) << std::endl;
 
-        glClearColor(0.9, 0.9, 0.9);
-        glEnable(GL_DEPTH_TEST);
-        glEnable(GL_CULL_FACE);
-        glLineWidth(3.0);
+        GL::ClearColor(0.9, 0.9, 0.9);
+        GL::Enable(GL_DEPTH_TEST);
+        GL::Enable(GL_CULL_FACE);
+        GL::LineWidth(3.0);
 
         Lights::init();
         Camera::init(width, height);
 
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
+        GL::MatrixMode(GL_PROJECTION);
+        GL::LoadIdentity();
         Camera::perspective();
 
         return 0;

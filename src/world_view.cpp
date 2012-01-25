@@ -19,14 +19,14 @@ void WorldView::gl_init() {
         chunk_view->gl_init();
     }
 
-    list = glGenLists(1);
-    glNewList(list, GL_COMPILE);
+    list = GL::GenLists(1);
+    GL::NewList(list, GL_COMPILE);
     for (ChunkView *chunk_view : chunk_views) {
         chunk_view->display();
     }
-    glEndList();
+    GL::EndList();
 }
 
 void WorldView::display() {
-    glCallList(list);
+    GL::CallList(list);
 }
