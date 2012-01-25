@@ -12,4 +12,7 @@ namespace Main {
     extern int sdl_init();
     extern int gl_init();
     extern void handle_event(SDL_Event);
+
+    extern SDL_Window *window;
+    extern SDL_GLContext context;
 }

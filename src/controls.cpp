@@ -3,7 +3,7 @@
 #include "camera.hpp"
 
 namespace Controls {
-    bool handle_movement(SDL_keysym key, int state) {
+    bool handle_movement(SDL_Keysym key, int state) {
         Direction direction;
 
         switch (key.sym) {

@@ -9,13 +9,13 @@ CFLAGS = -Wall -pedantic
 CFLAGS += -g
 #CFLAGS += -O3
 CFLAGS += -MD -MP -MF .dep/$(subst /,-,$@).d
-CFLAGS += $(shell pkg-config --cflags sdl)
+CFLAGS += $(shell pkg-config --cflags sdl2)
 CFLAGS += $(ORIGINAL_CFLAGS)
 CFLAGS += -iquote$(abspath ./src)
 
 CPPFLAGS = $(CFLAGS) $(ORIGINAL_CPPFLAGS)
 
-LDFLAGS += $(shell pkg-config --libs sdl)
+LDFLAGS += $(shell pkg-config --libs sdl2)
 
 -include local.mk
 

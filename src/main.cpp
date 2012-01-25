@@ -68,7 +68,7 @@ namespace Main {
         glColor3f(0.59, 0.29, 0);
         wv->display();
 
-        SDL_GL_SwapBuffers();
+        SDL_GL_SwapWindow(window);
     }
 
     void Cleanup() {
@@ -100,7 +100,7 @@ int main(int argc, char *argv[]) {
     Main::Init();
 
     update_semaphore = SDL_CreateSemaphore(0);
-    SDL_Thread *update_thread = SDL_CreateThread(Main::UpdateThread, NULL);
+    SDL_Thread *update_thread = SDL_CreateThread(Main::UpdateThread, "UpdateThread", NULL);
 
     unsigned int next_game_tick = SDL_GetTicks();
     unsigned int loops = 0;

@@ -4,6 +4,9 @@
 #include "lights.hpp"
 
 namespace Main {
+    SDL_Window *window;
+    SDL_GLContext context;
+
     int width = 640,
         height = 480;
 
@@ -12,7 +15,8 @@ namespace Main {
             Debug::error << "SDL Initialisation Error: " << SDL_GetError() << std::endl;
             return 1;
         }
-        Debug::debug << "Using SDL" << std::endl;
+        Debug::debug << "SDL initialised" << std::endl;
+        Debug::debug << "Using video driver: " << SDL_GetCurrentVideoDriver() << std::endl;
 
         if (SDL_GL_LoadLibrary( NULL ) != 0) {
             Debug::error << "SDL GL Load Library Error: " << SDL_GetError() << std::endl;
@@ -20,8 +24,8 @@ namespace Main {
         }
         Debug::debug << "Loaded SDL GL Library" << std::endl;
 
-        SDL_WM_SetCaption("Gamelike Game", "Gamelike");
-
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
         SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
         SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
@@ -29,14 +33,21 @@ namespace Main {
         SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
         SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
 
-        if (SDL_SetVideoMode(640, 480, 0, SDL_OPENGL | SDL_RESIZABLE) == NULL) {
-            Debug::error << "Set Video Mode Error: " << SDL_GetError() << std::endl;
+        window = SDL_CreateWindow("Gamelike Game", 0, 0, 640, 480, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+        if (window == NULL) {
+            Debug::error << "Create Window Error: " << SDL_GetError() << std::endl;
             return 1;
         }
-        Debug::debug << "Video Mode Set" << std::endl;
+        Debug::debug << "Window Created" << std::endl;
 
-        SDL_ShowCursor(SDL_DISABLE);
-        SDL_WM_GrabInput(SDL_GRAB_ON);
+        context = SDL_GL_CreateContext(window);
+        if (context == NULL) {
+            Debug::error <<  "Create Context Error: " << SDL_GetError() << std::endl;
+            return 1;
+        }
+        Debug::debug << "Context created" << std::endl;
+
+        SDL_SetRelativeMouseMode(SDL_TRUE);
         return 0;
     }
 

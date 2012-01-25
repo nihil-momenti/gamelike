@@ -16,7 +16,7 @@ File.open 'src/GL_bindings.cpp', 'w' do |f|
 
 #include "debug.hpp"
 
-#{ funcs.map { |func| "#{func.name}Proc #{func.name};" }.join "\n" }
+#{ funcs.map { |func| "#{func.name}Proc #{func.name} = NULL;" }.join "\n" }
 
 int GL_Bindings::init() {
     int result = 0;

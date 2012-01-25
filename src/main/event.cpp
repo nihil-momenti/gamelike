@@ -11,11 +11,9 @@ namespace Main {
         grabbed = !grabbed;
 
         if (grabbed) {
-            SDL_ShowCursor(SDL_DISABLE);
-            SDL_WM_GrabInput(SDL_GRAB_ON);
+            SDL_SetRelativeMouseMode(SDL_TRUE);
         } else {
-            SDL_ShowCursor(SDL_ENABLE);
-            SDL_WM_GrabInput(SDL_GRAB_OFF);
+            SDL_SetRelativeMouseMode(SDL_FALSE);
         }
     }
 
@@ -28,7 +26,7 @@ namespace Main {
             case SDL_KEYDOWN:
                 switch (event.key.keysym.sym) {
                     case SDLK_q:
-                        if (event.key.keysym.mod & KMOD_META) {
+                        if (event.key.keysym.mod & KMOD_GUI) {
                             running = false;
                             return;
                         }
@@ -47,16 +45,16 @@ namespace Main {
                 }
                 return;
 
-            case SDL_VIDEORESIZE:
-                width = event.resize.w;
-                height = event.resize.h;
+           // case SDL_VIDEORESIZE:
+           //     width = event.resize.w;
+           //     height = event.resize.h;
 
-                if (SDL_SetVideoMode(width, height, 0, SDL_OPENGL | SDL_RESIZABLE) == NULL) {
-                    Debug::error << "Set Video Mode Error: " << SDL_GetError() << std::endl;
-                    running = false;
-                }
-                gl_init();
-                return;
+           //     if (SDL_SetVideoMode(width, height, 0, SDL_OPENGL | SDL_RESIZABLE) == NULL) {
+           //         Debug::error << "Set Video Mode Error: " << SDL_GetError() << std::endl;
+           //         running = false;
+           //     }
+           //     gl_init();
+           //     return;
 
             default:
                 break;
