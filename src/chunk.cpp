@@ -8,9 +8,9 @@
 Chunk::Chunk(int i, int j, int k, int y) 
         : i(i), j(j), k(k), y(y) {
     blocks = new Block[(1 + 3*CHUNK_SIZE*(CHUNK_SIZE+1))*CHUNK_HEIGHT];
-    for (BlockWrapper bw : (*this)) {
-        //bw.block.type = int(rand() % 5);
-        bw.block.type = (i+2*j+3*k+4*y)%4+1;
+    this->begin().set_indices_till(this->end());
+    for (Block &block : (*this)) {
+        block.type = (i+2*j+3*k+4*y)%4+1;
     }
 }
 

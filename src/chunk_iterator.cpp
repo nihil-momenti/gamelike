@@ -84,16 +84,27 @@ ChunkIterator & ChunkIterator::operator++ (int val) {
     return (*this);
 }
 
-int ChunkIterator::index(int i, int j, int k, int y) {
-    i = i - k + CHUNK_SIZE;
-    j = j + k + CHUNK_SIZE;
+int ChunkIterator::index() {
+    int ii = i - k + CHUNK_SIZE;
+    int jj = j + k + CHUNK_SIZE;
 
-    int index_in_level = (i + j + 1) * (i + j) / 2 - (CHUNK_SIZE + 1) * CHUNK_SIZE / 2 + j;
+    int index_in_level = (ii + jj + 1) * (ii + jj) / 2 - (CHUNK_SIZE + 1) * CHUNK_SIZE / 2 + jj;
     int level_index = (3 * CHUNK_SIZE * (CHUNK_SIZE + 1) + 1) * y;
 
     return level_index + index_in_level;
 }
 
-BlockWrapper ChunkIterator::operator* () {
-    return BlockWrapper(chunk->blocks[index(i,j,k,y)], i, j, k, y, index(i, j, k, y));
+Block & ChunkIterator::operator* () {
+    return chunk->blocks[index()];
+}
+
+void ChunkIterator::set_indices_till(const ChunkIterator &end) {
+    for (; *this != end; ++(*this)) {
+        Block &block = *(*this);
+        block.i = i;
+        block.j = j;
+        block.k = k;
+        block.y = y;
+        block.index = index();
+    }
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "block_wrapper.hpp"
+#include "block.hpp"
 
 class Chunk;
 
@@ -14,12 +14,14 @@ class ChunkIterator {
 
         ChunkIterator & operator++ ();
         ChunkIterator & operator++ (int);
-        BlockWrapper operator* ();
+        Block & operator* ();
+
+        void set_indices_till(const ChunkIterator &);
 
     private:
         Chunk *chunk;
 
-        int index(int, int, int, int);
+        int index();
 
         int i, j, k, y, n, side, l;
 };

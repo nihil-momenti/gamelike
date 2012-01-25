@@ -115,8 +115,8 @@ void ChunkView::gl_init() {
     glPushMatrix();
     glTranslated((2*CHUNK_SIZE-2)*(chunk->i+0.5*(chunk->j-chunk->k))-.5*M_R3_2*(chunk->j+chunk->k), M_R3_2*CHUNK_HEIGHT*chunk->y, M_R3_2*(2*CHUNK_SIZE-2)*(chunk->j+chunk->k)-.5*(chunk->i+.5*(chunk->j-chunk->k)));
     glBegin(GL_TRIANGLES);
-    for (BlockWrapper bw : *chunk) {
-        switch (bw.block.type) {
+    for (Block &block : *chunk) {
+        switch (block.type) {
             case 1:
                 glColor3ub(150, 75, 0);
                 break;
@@ -131,8 +131,8 @@ void ChunkView::gl_init() {
                 break;
         }
 
-        if (bw.block.type != 0) {
-            draw_hexagonal_prism(M_R3_2*(bw.j+bw.k), M_R3_2*bw.y, bw.i+0.5*(bw.j-bw.k), M_R3_2, 0.5774);
+        if (block.type != 0) {
+            draw_hexagonal_prism(M_R3_2*(block.j+block.k), M_R3_2*block.y, block.i+0.5*(block.j-block.k), M_R3_2, 0.5774);
         }
     }
     glEnd();
