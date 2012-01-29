@@ -1,7 +1,5 @@
 #pragma once
 
-#include "geom.hpp"
-
 typedef enum {
     FORWARD =  1,
     BACK    =  2,

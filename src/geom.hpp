@@ -1,7 +1,8 @@
-#ifndef GEOM_HPP
-#define GEOM_HPP
+#pragma once
 
 #include <iostream>
+
+namespace Geom {
 
 struct Vector3;
 
@@ -122,4 +123,4 @@ inline Matrix3 operator/ (double lhs, Matrix3 rhs) {
     return rhs / lhs;
 }
 
-#endif
+} // namespace Geom

@@ -2,6 +2,8 @@
 
 #include "geom.hpp"
 
+namespace Geom {
+
 //struct Point3 {
     Point3::Point3()
         : x(0.0), y(0.0), z(0.0) {
@@ -367,3 +369,5 @@
         }
     }
 //};
+
+} // namespace Geom
