@@ -7,7 +7,7 @@ ORIGINAL_CPPFLAGS := $(CPPFLAGS)
 CFLAGS = -Wall -pedantic
 
 CFLAGS += -g
-#CFLAGS += -O3
+CFLAGS += -O4
 CFLAGS += -MD -MP -MF .dep/$(subst /,-,$@).d
 CFLAGS += $(shell pkg-config --cflags sdl2)
 CFLAGS += $(ORIGINAL_CFLAGS)
