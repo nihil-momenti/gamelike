@@ -22,6 +22,8 @@ class Window {
         Window(WindowSettings);
         ~Window();
 
+        void gl_init();
+
         void set_world(WorldView *);
         void render(double);
 
@@ -29,6 +31,6 @@ class Window {
         const char *error_msg;
         SDL_Window *sdl_window;
 
-    private:
         View view;
+    private:
 };

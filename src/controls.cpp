@@ -1,6 +1,6 @@
 #include "controls.hpp"
 
-#include "camera.hpp"
+#include "main.hpp"
 
 namespace Controls {
     bool handle_movement(SDL_Keysym key, int state) {
@@ -16,7 +16,7 @@ namespace Controls {
             default:                               return false;
         }
 
-        state == SDL_PRESSED ? Camera::move(direction) : Camera::stop(direction);
+        state == SDL_PRESSED ? Main::window->view.camera.move(direction) : Main::window->view.camera.stop(direction);
         return true;
     }
 

@@ -3,7 +3,7 @@
 #include "lights.hpp"
 
 Window::Window(WindowSettings settings)
-        : error(false), sdl_window(NULL), view() {
+        : error(false), sdl_window(NULL), view(settings.size.width, settings.size.height) {
     sdl_window = SDL_CreateWindow(
             settings.name.c_str(),
             settings.topleft.x,
@@ -22,6 +22,10 @@ Window::~Window() {
     if (sdl_window != NULL) {
         SDL_DestroyWindow(sdl_window);
     }
+}
+
+void Window::gl_init() {
+    view.camera.gl_init();
 }
 
 void Window::set_world(WorldView *world) {

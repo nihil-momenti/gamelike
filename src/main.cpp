@@ -102,7 +102,7 @@ int main(int argc, char *argv[]) {
         loops = 0;
         while (SDL_GetTicks() > next_game_tick && loops < MAX_FRAMESKIP) {
             Main::Event();
-            Camera::tick();
+            Main::window->view.camera.tick();
             next_game_tick += SKIP_TICKS;
             SDL_SemPost(update_semaphore);
             loops++;

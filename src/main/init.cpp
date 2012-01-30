@@ -38,9 +38,9 @@ namespace Main {
         SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
 
         WindowSettings settings = {
-            .name = "Gamelike Game",
-            .topleft = {0, 20},
-            .size = {640, 480}
+            "Gamelike Game", //name
+            {640, 480}, //size
+            {0, 20}, //topleft
         };
         window = new Window(settings);
         if (window->error) {
@@ -76,11 +76,10 @@ namespace Main {
         GL::LineWidth(3.0);
 
         Lights::init();
-        Camera::init(width, height);
 
         GL::MatrixMode(GL_PROJECTION);
         GL::LoadIdentity();
-        Camera::perspective();
+        window->view.camera.perspective();
 
         return 0;
     }

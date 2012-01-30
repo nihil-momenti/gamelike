@@ -1,5 +1,5 @@
 #include "view.hpp"
 
-View::View()
-        : camera(), world() {
+View::View(int width, int height)
+        : camera(width, height), world() {
 }
