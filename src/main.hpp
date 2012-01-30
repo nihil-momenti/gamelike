@@ -18,5 +18,5 @@ namespace Main {
     extern void handle_event(SDL_Event);
 
     extern Window *window;
-    extern SDL_GLContext context;
+    extern Window *window2;
 }

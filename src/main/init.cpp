@@ -7,7 +7,7 @@
 
 namespace Main {
     Window *window = NULL;
-    SDL_GLContext context = NULL;
+    Window *window2 = NULL;
 
     int width = 640,
         height = 480;
@@ -38,48 +38,46 @@ namespace Main {
         SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
 
         WindowSettings settings = {
-            "Gamelike Game", //name
+            "Gamelike Game 1", //name
             {640, 480}, //size
             {0, 20}, //topleft
         };
         window = new Window(settings);
         if (window->error) {
-            Debug::error << "Create Window Error: " << window->error_msg << std::endl;
+            Debug::error << "Create Window 1 Error: " << window->error_msg << std::endl;
             return 1;
         }
-        Debug::debug << "Window Created" << std::endl;
+        WindowSettings settings2 = {
+            "Gamelike Game 2", //name
+            {640, 480}, //size
+            {650, 20}, //topleft
+        };
+        window2 = new Window(settings2);
+        if (window2->error) {
+            Debug::error << "Create Window 2 Error: " << window2->error_msg << std::endl;
+            return 1;
+        }
+        Debug::debug << "Windows Created" << std::endl;
 
         SDL_SetRelativeMouseMode(SDL_TRUE);
         return 0;
     }
 
     int gl_init() {
-        context = SDL_GL_CreateContext(window->sdl_window);
-        if (context == NULL) {
-            Debug::error <<  "Create Context Error: " << SDL_GetError() << std::endl;
-            return 1;
+        window->gl_init();
+        if (window->error) {
+            Debug::error <<  "Create Context Window 1 Error: " << window->error_msg << std::endl;
         }
-        Debug::debug << "Context created" << std::endl;
 
-        if (GL::init_bindings() != 0) {
-            Debug::error << "Error loading OpenGL functions." << std::endl;
-            return 1;
+        window2->gl_init();
+        if (window2->error) {
+            Debug::error <<  "Create Context Window 2 Error: " << window2->error_msg << std::endl;
         }
+        Debug::debug << "Window Contexts created" << std::endl;
 
         Debug::debug << "OpenGL vendor: " << GL::GetString(GL_VENDOR) << std::endl;
         Debug::debug << "OpenGL renderer: " << GL::GetString(GL_RENDERER) << std::endl;
         Debug::debug << "OpenGL version: " << GL::GetString(GL_VERSION) << std::endl;
-
-        GL::ClearColor(0.9, 0.9, 0.9);
-        GL::Enable(GL_DEPTH_TEST);
-        GL::Enable(GL_CULL_FACE);
-        GL::LineWidth(3.0);
-
-        Lights::init();
-
-        GL::MatrixMode(GL_PROJECTION);
-        GL::LoadIdentity();
-        window->view.camera.perspective();
 
         return 0;
     }

@@ -22,17 +22,43 @@ Window::~Window() {
     if (sdl_window != NULL) {
         SDL_DestroyWindow(sdl_window);
     }
+
+    if (context != NULL) {
+        SDL_GL_DeleteContext(context);
+    }
 }
 
 void Window::gl_init() {
+    context = SDL_GL_CreateContext(sdl_window);
+    if (context == NULL || GL::init_bindings() != 0) {
+        error = true;
+        error_msg = SDL_GetError();
+        return;
+    }
+
+    GL::ClearColor(0.9, 0.9, 0.9);
+    GL::Enable(GL_DEPTH_TEST);
+    GL::Enable(GL_CULL_FACE);
+    GL::LineWidth(3.0);
+
+    Lights::init();
+
+    GL::MatrixMode(GL_PROJECTION);
+    GL::LoadIdentity();
+
     view.camera.gl_init();
+    view.camera.perspective();
 }
 
 void Window::set_world(WorldView *world) {
     view.world = world;
+    SDL_GL_MakeCurrent(sdl_window, context);
+    world->gl_init();
 }
 
 void Window::render(double interpolation) {
+    SDL_GL_MakeCurrent(sdl_window, context);
+
     GL::Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     GL::MatrixMode(GL_MODELVIEW);

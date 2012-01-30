@@ -18,6 +18,7 @@ SDL_sem *update_semaphore;
 namespace Main {
     World *world;
     WorldView *wv;
+    WorldView *wv2;
     bool running = true;
     bool sdl_initialized = false;
 
@@ -36,9 +37,11 @@ namespace Main {
 
         world = new World();
         wv = new WorldView(world);
+        wv2 = new WorldView(world);
+
         window->set_world(wv);
 
-        wv->gl_init();
+        window2->set_world(wv2);
     }
 
     void Event() {
@@ -54,6 +57,7 @@ namespace Main {
 
     void Render(double interpolation) {
         window->render(interpolation);
+        window2->render(interpolation);
     }
 
     void Cleanup() {
@@ -65,8 +69,8 @@ namespace Main {
             delete world;
         }
 
-        if (context != NULL) {
-            SDL_GL_DeleteContext(context);
+        if (window2 != NULL) {
+            delete window2;
         }
 
         if (window != NULL) {
@@ -103,6 +107,7 @@ int main(int argc, char *argv[]) {
         while (SDL_GetTicks() > next_game_tick && loops < MAX_FRAMESKIP) {
             Main::Event();
             Main::window->view.camera.tick();
+            Main::window2->view.camera.tick();
             next_game_tick += SKIP_TICKS;
             SDL_SemPost(update_semaphore);
             loops++;

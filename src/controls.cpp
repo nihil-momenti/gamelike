@@ -17,6 +17,7 @@ namespace Controls {
         }
 
         state == SDL_PRESSED ? Main::window->view.camera.move(direction) : Main::window->view.camera.stop(direction);
+        state == SDL_PRESSED ? Main::window2->view.camera.move(direction) : Main::window2->view.camera.stop(direction);
         return true;
     }
 

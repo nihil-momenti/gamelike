@@ -42,6 +42,7 @@ namespace Main {
             case SDL_MOUSEMOTION:
                 if (grabbed) {
                     window->view.camera.turn(event.motion.xrel, event.motion.yrel);
+                    window2->view.camera.turn(event.motion.xrel, event.motion.yrel);
                 }
                 return;
 

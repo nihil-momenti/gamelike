@@ -30,6 +30,7 @@ class Window {
         bool error;
         const char *error_msg;
         SDL_Window *sdl_window;
+        SDL_GLContext context;
 
         View view;
     private:

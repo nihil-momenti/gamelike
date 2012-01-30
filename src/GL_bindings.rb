@@ -19,8 +19,13 @@ File.open 'src/GL_bindings.cpp', 'w' do |f|
 namespace GL {
     #{ funcs.map { |func| "    #{func.name}Proc #{func.name} = NULL;" }.join "\n" }
 
+    static bool already_run = false;
+    static int result = 0;
+
     int init_bindings() {
-        int result = 0;
+        if (already_run) {
+            return result;
+        }
 
     #{
       funcs.map do |func|
@@ -33,6 +38,8 @@ namespace GL {
         IEND
       end.join "\n"
     }
+        already_run = true;
+
         return result;
     }
 }
