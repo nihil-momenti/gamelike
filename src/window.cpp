@@ -2,6 +2,9 @@
 
 #include "lights.hpp"
 
+SDL_GLContext Window::context = NULL;
+int Window::context_ref_count = 0;
+
 Window::Window(WindowSettings settings)
         : error(false), sdl_window(NULL), view(settings.size.width, settings.size.height) {
     sdl_window = SDL_CreateWindow(
@@ -23,14 +26,19 @@ Window::~Window() {
         SDL_DestroyWindow(sdl_window);
     }
 
-    if (context != NULL) {
+    Window::context_ref_count--;
+    if (Window::context != NULL && Window::context_ref_count == 0) {
         SDL_GL_DeleteContext(context);
+        context = NULL;
     }
 }
 
 void Window::gl_init() {
-    context = SDL_GL_CreateContext(sdl_window);
-    if (context == NULL || GL::init_bindings() != 0) {
+    Window::context_ref_count++;
+    if (Window::context == NULL) {
+        Window::context = SDL_GL_CreateContext(sdl_window);
+    }
+    if (Window::context == NULL || GL::init_bindings() != 0) {
         error = true;
         error_msg = SDL_GetError();
         return;
@@ -52,12 +60,12 @@ void Window::gl_init() {
 
 void Window::set_world(WorldView *world) {
     view.world = world;
-    SDL_GL_MakeCurrent(sdl_window, context);
+    SDL_GL_MakeCurrent(sdl_window, Window::context);
     world->gl_init();
 }
 
 void Window::render(double interpolation) {
-    SDL_GL_MakeCurrent(sdl_window, context);
+    SDL_GL_MakeCurrent(sdl_window, Window::context);
 
     GL::Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

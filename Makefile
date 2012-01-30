@@ -28,31 +28,43 @@ CPP_FILES =  $(wildcard src/*.cpp)
 CPP_FILES += $(wildcard src/*/*.cpp)
 CPP_FILES += src/GL_bindings.cpp
 
-OBJECTS = $(C_FILES:.c=.o) $(CPP_FILES:.cpp=.o)
+OBJECTS = $(C_FILES:.c=) $(CPP_FILES:.cpp=)
 
 PROJECT = gamelike
 
 ###############################################################################
 
-all: src/GL_bindings.hpp $(PROJECT)
+all: src/GL_bindings.hpp $(PROJECT)-optimized $(PROJECT)
 rebuild: clean all
 
 
-$(PROJECT): $(OBJECTS:src/%=build/%)
+$(PROJECT): $(OBJECTS:src/%=build/%.o)
+	$(CXX) $(CPPFLAGS) -o $@ $^ $(LDFLAGS)
+
+$(PROJECT)-optimized: $(OBJECTS:src/%=build/%-optimized.o)
 	$(CXX) $(CPPFLAGS) -o $@ $^ $(LDFLAGS)
 
 
 src/GL_bindings.hpp src/GL_bindings.cpp: src/GL_bindings.rb
 	ruby src/GL_bindings.rb
 
+
 build/%.o: src/%.c
 	@mkdir -p $(dir $@)
 	$(CC) -std=gnu99 $(CFLAGS) -o $@ -c $<
+
+build/%-optimized.o: src/%.c
+	@mkdir -p $(dir $@)
+	$(CC) -O4 -std=gnu99 $(CFLAGS) -o $@ -c $<
 
 
 build/%.o: src/%.cpp
 	@mkdir -p $(dir $@)
 	$(CXX) -std=c++0x -Wno-variadic-macros $(CPPFLAGS) -o $@ -c $<
+
+build/%-optimized.o: src/%.cpp
+	@mkdir -p $(dir $@)
+	$(CXX) -O4 -std=c++0x -Wno-variadic-macros $(CPPFLAGS) -o $@ -c $<
 
 
 clean:

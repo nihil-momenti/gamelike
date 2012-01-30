@@ -75,6 +75,13 @@ namespace Main {
         }
         Debug::debug << "Window Contexts created" << std::endl;
 
+        // Move window 2 slightly right.
+        window2->view.camera.move(RIGHT);
+        for (int i = 0; i < 10; i++) {
+            window2->view.camera.tick();
+        }
+        window2->view.camera.stop(RIGHT);
+
         Debug::debug << "OpenGL vendor: " << GL::GetString(GL_VENDOR) << std::endl;
         Debug::debug << "OpenGL renderer: " << GL::GetString(GL_RENDERER) << std::endl;
         Debug::debug << "OpenGL version: " << GL::GetString(GL_VERSION) << std::endl;

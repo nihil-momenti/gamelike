@@ -41,7 +41,7 @@ namespace Main {
 
         window->set_world(wv);
 
-        window2->set_world(wv2);
+        window2->set_world(wv);
     }
 
     void Event() {
