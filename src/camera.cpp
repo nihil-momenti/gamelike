@@ -17,9 +17,9 @@ Camera::Camera(int width, int height)
           far(100.0),
           width(width),
           height(height),
-          moving(0),
-          to_move(0),
-          to_stop(0) {
+          moving(STILL),
+          to_move(STILL),
+          to_stop(STILL) {
 }
 
 void Camera::gl_init() {
@@ -127,5 +127,5 @@ void Camera::tick() {
     lookat = lookat + current_movement;
 
     moving = (moving | to_move) & ~to_stop;
-    to_move = to_stop = 0;
+    to_move = to_stop = STILL;
 }
