@@ -24,5 +24,5 @@ class Chunk {
         // 1 + 6 + 2*6 + 3*6 + ... * n*6
         Block *blocks;
 
-        friend ChunkIterator;
+        friend class ChunkIterator;
 };
