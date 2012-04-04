@@ -6,8 +6,8 @@
 #include <cmath>
 
 Camera::Camera(int width, int height)
-        : position(0,0,3),
-          lookat(0,0,2),
+        : position(),
+          lookat(),
           viewup(0,1,0),
           sensitivity(0.001),
           speed(1.0),
@@ -20,6 +20,12 @@ Camera::Camera(int width, int height)
           moving(STILL),
           to_move(STILL),
           to_stop(STILL) {
+      position.values[0] = 0;
+      position.values[1] = 0;
+      position.values[2] = 3;
+      lookat.values[0] = 0;
+      lookat.values[1] = 0;
+      lookat.values[2] = 2;
 }
 
 void Camera::gl_init() {
@@ -72,7 +78,7 @@ void Camera::look(double interpolation) {
     Geom::Vector3 facing = (lookat - position).unit(),
                   side   = facing.cross(viewup).unit(),
                   up     = side.cross(facing).unit();
-    Geom::Point3 current_position = position + movement(interpolation);
+    Geom::Point<double, 3> current_position = position + movement(interpolation);
 
     GLdouble M[16] = {
         side.dx, up.dx, -facing.dx, 0.0,
@@ -82,7 +88,7 @@ void Camera::look(double interpolation) {
     };
 
     GL::MultMatrixd(M);
-    GL::Translated(-current_position.x, -current_position.y, -current_position.z);
+    GL::Translated(-current_position.values[0], -current_position.values[1], -current_position.values[2]);
 }
 
 void Camera::perspective() {

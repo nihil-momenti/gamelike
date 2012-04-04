@@ -24,8 +24,8 @@ class Camera {
         Geom::Vector3 up(double);
         Geom::Vector3 movement(double);
 
-        Geom::Point3 position,
-                     lookat;
+        Geom::Point<double, 3> position,
+                               lookat;
         Geom::Vector3 viewup;
 
         double sensitivity,
