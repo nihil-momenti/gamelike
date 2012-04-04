@@ -3,16 +3,16 @@
 #include "vector.hpp"
 
 namespace Geom {
-    Vector3::Vector3() :
-        dx(0.0), dy(0.0), dz(0.0) {
+    Vector3::Vector3()
+        : Vector3(0.0, 0.0, 0.0) {
     }
 
-    Vector3::Vector3(double dx, double dy, double dz) :
-        dx(dx), dy(dy), dz(dz) {
+    Vector3::Vector3(const Vector3& other)
+        : Vector3(other.dx, other.dy, other.dz) {
     }
 
-    Vector3::Vector3(const Vector3& other) :
-        dx(other.dx), dy(other.dy), dz(other.dz) {
+    Vector3::Vector3(double dx, double dy, double dz)
+        : dx(dx), dy(dy), dz(dz) {
     }
 
     double Vector3::length() const {

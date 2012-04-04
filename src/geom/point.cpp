@@ -4,15 +4,15 @@
 
 namespace Geom {
     Point3::Point3()
-        : x(0.0), y(0.0), z(0.0) {
+        : Point3(0.0, 0.0, 0.0) {
+    }
+
+    Point3::Point3(const Point3 &other)
+        : Point3(other.x, other.y, other.z) {
     }
 
     Point3::Point3(double x, double y, double z)
         : x(x), y(y), z(z) {
-    }
-
-    Point3::Point3(const Point3 &other)
-        : x(other.x), y(other.y), z(other.z) {
     }
 
     bool Point3::operator== (const Point3 &rhs) const {

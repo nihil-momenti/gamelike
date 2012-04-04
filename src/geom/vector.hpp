@@ -7,8 +7,8 @@ namespace Geom {
         double dx, dy, dz;
 
         Vector3();
-        Vector3(double, double, double);
         Vector3(const Vector3 &);
+        Vector3(double, double, double);
 
         double length() const;
         double dot(const Vector3 &) const;

@@ -4,23 +4,28 @@
 
 namespace Geom {
     Quaternion::Quaternion()
-        : r(0.0), i(0.0), j(0.0), k(0.0) {
+        : Quaternion(0.0, 0.0, 0.0, 0.0) {
+    }
+
+    Quaternion::Quaternion(const Quaternion &other)
+        : Quaternion(other.r, other.i, other.j, other.k) {
+    }
+
+    Quaternion::Quaternion(const Vector3 &vec)
+        : Quaternion(0.0, vec.dx, vec.dy, vec.dz) {
+    }
+
+    Quaternion::Quaternion(double angle, const Vector3 &vec)
+        : Quaternion(
+                cos(angle * M_PI_2 / 360),
+                vec.dx * sin(angle * M_PI_2 / 360),
+                vec.dy * sin(angle * M_PI_2 / 360),
+                vec.dz * sin(angle * M_PI_2 / 360)
+            ) {
     }
 
     Quaternion::Quaternion(double r, double i, double j, double k)
         : r(r), i(i), j(j), k(k) {
-    }
-
-    Quaternion::Quaternion(const Quaternion &other)
-        : r(other.r), i(other.i), j(other.j), k(other.k) {
-    }
-
-    Quaternion::Quaternion(const Vector3 &vec)
-        : r(0.0), i(vec.dx), j(vec.dy), k(vec.dz) {
-    }
-
-    Quaternion::Quaternion(double angle, const Vector3 &vec)
-        : r(cos(angle * M_PI_2 / 360)), i(vec.dx * sin(angle * M_PI_2 / 360)), j(vec.dy * sin(angle * M_PI_2 / 360)), k(vec.dz * sin(angle * M_PI_2 / 360)) {
     }
 
     double Quaternion::norm() const {

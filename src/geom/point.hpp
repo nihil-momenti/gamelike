@@ -9,8 +9,8 @@ namespace Geom {
         double x, y, z;
 
         Point3();
-        Point3(double, double, double);
         Point3(const Point3 &);
+        Point3(double, double, double);
 
         bool operator== (const Point3 &) const;
         bool operator!= (const Point3 &) const;
