@@ -9,16 +9,16 @@ namespace Geom {
         values[6] = values[7] = values[8] = 0.0;
     }
 
-    Matrix3::Matrix3(const Vector3 &vec1, const Vector3 &vec2) {
-        values[0] = vec1.dx * vec2.dx;
-        values[1] = vec1.dx * vec2.dy;
-        values[2] = vec1.dx * vec2.dz;
-        values[3] = vec1.dy * vec2.dx;
-        values[4] = vec1.dy * vec2.dy;
-        values[5] = vec1.dy * vec2.dz;
-        values[6] = vec1.dz * vec2.dx;
-        values[7] = vec1.dz * vec2.dy;
-        values[8] = vec1.dz * vec2.dz;
+    Matrix3::Matrix3(const Vector<double, 3> &vec1, const Vector<double, 3> &vec2) {
+        values[0] = vec1.values[0] * vec2.values[0];
+        values[1] = vec1.values[0] * vec2.values[1];
+        values[2] = vec1.values[0] * vec2.values[2];
+        values[3] = vec1.values[1] * vec2.values[0];
+        values[4] = vec1.values[1] * vec2.values[1];
+        values[5] = vec1.values[1] * vec2.values[2];
+        values[6] = vec1.values[2] * vec2.values[0];
+        values[7] = vec1.values[2] * vec2.values[1];
+        values[8] = vec1.values[2] * vec2.values[2];
     }
 
     Matrix3 Matrix3::identity() {
@@ -27,11 +27,12 @@ namespace Geom {
         return I;
     }
 
-    Vector3 Matrix3::operator*(const Vector3 &rhs) {
-        double dx = values[0] * rhs.dx + values[1] * rhs.dy + values[2] * rhs.dz;
-        double dy = values[3] * rhs.dx + values[4] * rhs.dy + values[5] * rhs.dz;
-        double dz = values[6] * rhs.dx + values[7] * rhs.dy + values[8] * rhs.dz;
-        return Vector3(dx, dy, dz);
+    Vector<double, 3> Matrix3::operator*(const Vector<double, 3> &rhs) {
+        Vector<double, 3> result;
+        result.values[0] = values[0] * rhs.values[0] + values[1] * rhs.values[1] + values[2] * rhs.values[2];
+        result.values[1] = values[3] * rhs.values[0] + values[4] * rhs.values[1] + values[5] * rhs.values[2];
+        result.values[2] = values[6] * rhs.values[0] + values[7] * rhs.values[1] + values[8] * rhs.values[2];
+        return result;
     }
 
     Matrix3 Matrix3::operator+(const Matrix3 &rhs) {
@@ -116,16 +117,27 @@ namespace Geom {
         return m;
     }
 
-    Vector3 Matrix3::col(int num) {
+    Vector<double, 3> Matrix3::col(int num) {
+        Vector<double, 3> result;
         switch (num) {
             case 0:
-                return Vector3(values[0], values[3], values[6]);
+                result.values[0] = values[0];
+                result.values[1] = values[3];
+                result.values[2] = values[6];
+                break;
             case 1:
-                return Vector3(values[1], values[4], values[7]);
+                result.values[0] = values[1];
+                result.values[1] = values[4];
+                result.values[2] = values[7];
+                break;
             case 2:
-                return Vector3(values[2], values[5], values[8]);
+                result.values[0] = values[2];
+                result.values[1] = values[5];
+                result.values[2] = values[8];
+                break;
             default:
-                return Vector3();
+                break;
         }
+        return result;
     }
 }

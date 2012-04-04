@@ -17,16 +17,16 @@ class Camera {
         void perspective();
 
     private:
-        Geom::Vector3 forward();
-        Geom::Vector3 right();
-        Geom::Vector3 forward(double);
-        Geom::Vector3 right(double);
-        Geom::Vector3 up(double);
-        Geom::Vector3 movement(double);
+        Geom::Vector<double, 3> forward();
+        Geom::Vector<double, 3> right();
+        Geom::Vector<double, 3> forward(double);
+        Geom::Vector<double, 3> right(double);
+        Geom::Vector<double, 3> up(double);
+        Geom::Vector<double, 3> movement(double);
 
         Geom::Point<double, 3> position,
                                lookat;
-        Geom::Vector3 viewup;
+        Geom::Vector<double, 3> viewup;
 
         double sensitivity,
                speed,

@@ -6,9 +6,9 @@
 #include <cmath>
 
 Camera::Camera(int width, int height)
-        : position(),
-          lookat(),
-          viewup(0,1,0),
+        : position({0, 0, 3}),
+          lookat({0, 0, 2}),
+          viewup({0, 1, 0}),
           sensitivity(0.001),
           speed(1.0),
           aspect(width/(double)height),
@@ -20,41 +20,36 @@ Camera::Camera(int width, int height)
           moving(STILL),
           to_move(STILL),
           to_stop(STILL) {
-      position.values[0] = 0;
-      position.values[1] = 0;
-      position.values[2] = 3;
-      lookat.values[0] = 0;
-      lookat.values[1] = 0;
-      lookat.values[2] = 2;
 }
 
 void Camera::gl_init() {
     GL::Viewport(0, 0, width, height);
 }
 
-Geom::Vector3 Camera::forward() {
-    Geom::Vector3 facing = (lookat - position).unit();
-    return Geom::Vector3(facing.dx, 0, facing.dz).unit();
+Geom::Vector<double, 3> Camera::forward() {
+    Geom::Vector<double, 3> facing = lookat - position;
+    facing.values[1] = 0;
+    return facing.unit();
 }
 
-Geom::Vector3 Camera::right() {
+Geom::Vector<double, 3> Camera::right() {
     return forward().cross(viewup).unit();
 }
 
-Geom::Vector3 Camera::forward(double amount) {
+Geom::Vector<double, 3> Camera::forward(double amount) {
     return amount * forward();
 }
 
-Geom::Vector3 Camera::right(double amount) {
+Geom::Vector<double, 3> Camera::right(double amount) {
     return amount * right();
 }
 
-Geom::Vector3 Camera::up(double amount) {
+Geom::Vector<double, 3> Camera::up(double amount) {
     return amount * viewup;
 }
 
-Geom::Vector3 Camera::movement(double interpolation) {
-    Geom::Vector3 current_movement;
+Geom::Vector<double, 3> Camera::movement(double interpolation) {
+    Geom::Vector<double, 3> current_movement;
 
     if (moving & FORWARD) { current_movement += forward(speed * interpolation);  }
     if (moving & BACK)    { current_movement += forward(-speed * interpolation); }
@@ -75,15 +70,15 @@ void Camera::stop(Direction direction) {
 }
 
 void Camera::look(double interpolation) {
-    Geom::Vector3 facing = (lookat - position).unit(),
-                  side   = facing.cross(viewup).unit(),
-                  up     = side.cross(facing).unit();
+    Geom::Vector<double, 3> facing = (lookat - position).unit(),
+                            side   = facing.cross(viewup).unit(),
+                            up     = side.cross(facing).unit();
     Geom::Point<double, 3> current_position = position + movement(interpolation);
 
     GLdouble M[16] = {
-        side.dx, up.dx, -facing.dx, 0.0,
-        side.dy, up.dy, -facing.dy, 0.0,
-        side.dz, up.dz, -facing.dz, 0.0,
+        side.values[0], up.values[0], -facing.values[0], 0.0,
+        side.values[1], up.values[1], -facing.values[1], 0.0,
+        side.values[2], up.values[2], -facing.values[2], 0.0,
         0.0,     0.0,   0.0,        1.0
     };
 
@@ -105,11 +100,11 @@ void Camera::perspective() {
 }
 
 void Camera::turn(double horizontal, double vertical) {
-    Geom::Vector3 original_look = (lookat - position).unit();
+    Geom::Vector<double, 3> original_look = (lookat - position).unit();
 
-    double x = original_look.dx;
-    double y = original_look.dy;
-    double z = original_look.dz;
+    double x = original_look.values[0];
+    double y = original_look.values[1];
+    double z = original_look.values[2];
 
     double r = sqrt(x*x + y*y + z*z);
 
@@ -123,11 +118,17 @@ void Camera::turn(double horizontal, double vertical) {
     y = r * cos(theta);
     z = r * sin(theta) * sin(phi);
 
-    lookat = position + Geom::Vector3(x, y, z).unit();
+
+    Geom::Vector<double, 3> new_look;
+    new_look.values[0] = x;
+    new_look.values[1] = y;
+    new_look.values[2] = z;
+
+    lookat = position + new_look.unit();
 }
 
 void Camera::tick() {
-    Geom::Vector3 current_movement = movement(1.0);
+    Geom::Vector<double, 3> current_movement = movement(1.0);
 
     position = position + current_movement;
     lookat = lookat + current_movement;

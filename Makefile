@@ -1,5 +1,5 @@
-CC  = clang
-CXX = clang++
+CC  = gcc
+CXX = g++
 
 ORIGINAL_CFLAGS   := $(CFLAGS)
 ORIGINAL_CPPFLAGS := $(CPPFLAGS)
@@ -8,11 +8,11 @@ CFLAGS = -Wall -pedantic
 
 CFLAGS += -g
 CFLAGS += -O3
-CFLAGS += -stdlib=libc++
+#CFLAGS += -stdlib=libc++
 CFLAGS += -MD -MP -MF .dep/$(subst /,-,$@).d
 CFLAGS += $(ORIGINAL_CFLAGS)
 CFLAGS += -iquote$(abspath ./src)
-CFLAGS += -I/usr/local/include/c++/v1
+#CFLAGS += -I/usr/local/include/c++/v1
 
 SDL_CFLAGS += $(shell sdl2-config --cflags)
 

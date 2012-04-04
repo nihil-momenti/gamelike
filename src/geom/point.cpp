@@ -4,17 +4,18 @@
 
 namespace Geom {
     template <typename T, int size>
-    Point<T, size>::Point() {
-        for (T& value : values) {
-            value = T();
-        }
+    Point<T, size>::Point()
+        : values() {
     }
 
     template <typename T, int size>
-    Point<T, size>::Point(const Point<T, size> &other) {
-        for (int i = 0; i < size; i++) {
-            values[i] = other.values[i];
-        }
+    Point<T, size>::Point(const Point<T, size> &other)
+        : values(other.values) {
+    }
+
+    template <typename T, int size>
+    Point<T, size>::Point(const std::initializer_list<T> &init_list)
+        : values(init_list) {
     }
 
     template <typename T, int size>
@@ -32,35 +33,31 @@ namespace Geom {
         return ! (*this == rhs);
     }
 
-    template <typename T>
-    Point<T, 3> operator+ (const Point<T, 3> &lhs, const Vector3 &rhs) {
-        Point<T, 3> point;
-
-        point.values[0] = lhs.values[0] + rhs.dx;
-        point.values[1] = lhs.values[1] + rhs.dy;
-        point.values[2] = lhs.values[2] + rhs.dz;
-
+    template <typename T, int size>
+    Point<T, size> operator+ (const Point<T, size> &lhs, const Vector<T, size> &rhs) {
+        Point<T, size> point;
+        for (int i = 0; i < size; i++) {
+            point.values[i] = lhs.values[i] + rhs.values[i];
+        }
         return point;
     }
 
-    template <typename T>
-    Point<T, 3> operator- (const Point<T, 3> &lhs, const Vector3 &rhs) {
-        Point<T, 3> point;
-
-        point.values[0] = lhs.values[0] - rhs.dx;
-        point.values[1] = lhs.values[1] - rhs.dy;
-        point.values[2] = lhs.values[2] - rhs.dz;
-
+    template <typename T, int size>
+    Point<T, size> operator- (const Point<T, size> &lhs, const Vector<T, size> &rhs) {
+        Point<T, size> point;
+        for (int i = 0; i < size; i++) {
+            point.values[i] = lhs.values[i] - rhs.values[i];
+        }
         return point;
     }
 
-    template <typename T>
-    Vector3 operator- (const Point<T, 3> &lhs, const Point<T, 3> &rhs) {
-        return Vector3(
-                lhs.values[0] - rhs.values[0],
-                lhs.values[1] - rhs.values[1],
-                lhs.values[2] - rhs.values[2]
-            );
+    template <typename T, int size>
+    Vector<T, size> operator- (const Point<T, size> &lhs, const Point<T, size> &rhs) {
+        Vector<T, size> vector;
+        for (int i = 0; i < size; i++) {
+            vector.values[i] = lhs.values[i] - rhs.values[i];
+        }
+        return vector;
     }
 
     template <typename T, int size>
@@ -79,7 +76,8 @@ namespace Geom {
     }
 
     template struct Point<double, 3>;
-    template Point<double, 3> operator+ (const Point<double, 3> &, const Vector3 &);
-    template Point<double, 3> operator- (const Point<double, 3> &, const Vector3 &);
-    template Vector3 operator- (const Point<double, 3> &, const Point<double, 3> &);
+    template std::ostream& operator<< (std::ostream &, const Point<double, 3> &);
+    template Point<double, 3> operator+ (const Point<double, 3> &, const Vector<double, 3> &);
+    template Point<double, 3> operator- (const Point<double, 3> &, const Vector<double, 3> &);
+    template Vector<double, 3> operator- (const Point<double, 3> &, const Point<double, 3> &);
 }

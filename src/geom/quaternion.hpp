@@ -10,8 +10,8 @@ namespace Geom {
 
         Quaternion();
         Quaternion(const Quaternion &);
-        Quaternion(const Vector3 &);
-        Quaternion(double, const Vector3 &);
+        Quaternion(const Vector<double, 3> &);
+        Quaternion(double, const Vector<double, 3> &);
         Quaternion(double, double, double, double);
 
         double norm() const;

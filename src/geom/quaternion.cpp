@@ -11,16 +11,16 @@ namespace Geom {
         : Quaternion(other.r, other.i, other.j, other.k) {
     }
 
-    Quaternion::Quaternion(const Vector3 &vec)
-        : Quaternion(0.0, vec.dx, vec.dy, vec.dz) {
+    Quaternion::Quaternion(const Vector<double, 3> &vec)
+        : Quaternion(0.0, vec.values[0], vec.values[1], vec.values[2]) {
     }
 
-    Quaternion::Quaternion(double angle, const Vector3 &vec)
+    Quaternion::Quaternion(double angle, const Vector<double, 3> &vec)
         : Quaternion(
                 cos(angle * M_PI_2 / 360),
-                vec.dx * sin(angle * M_PI_2 / 360),
-                vec.dy * sin(angle * M_PI_2 / 360),
-                vec.dz * sin(angle * M_PI_2 / 360)
+                vec.values[0] * sin(angle * M_PI_2 / 360),
+                vec.values[1] * sin(angle * M_PI_2 / 360),
+                vec.values[2] * sin(angle * M_PI_2 / 360)
             ) {
     }
 

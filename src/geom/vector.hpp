@@ -1,38 +1,60 @@
 #pragma once
 
+#include <array>
+#include <initializer_list>
 #include <iostream>
 
 namespace Geom {
-    struct Vector3 {
-        double dx, dy, dz;
+    template <typename T, int size>
+    struct Vector {
+        std::array<T, size> values;
 
-        Vector3();
-        Vector3(const Vector3 &);
-        Vector3(double, double, double);
+        Vector();
+        Vector(const Vector<T, size> &);
+        Vector(const std::initializer_list<T> &);
 
-        double length() const;
-        double dot(const Vector3 &) const;
-        Vector3 cross(const Vector3 &) const;
-        Vector3 unit() const;
+        T length() const;
+        T dot(const Vector<T, size> &) const;
+        Vector<T, size> cross(const Vector<T, size> &) const;
+        Vector<T, size> unit() const;
 
-        bool operator== (const Vector3 &) const;
-        bool operator!= (const Vector3 &) const;
+        bool operator== (const Vector<T, size> &) const;
+        bool operator!= (const Vector<T, size> &) const;
 
-        Vector3 & operator+= (const Vector3 &);
-        Vector3 & operator-= (const Vector3 &);
+        Vector<T, size> & operator+= (const Vector<T, size> &);
+        Vector<T, size> & operator-= (const Vector<T, size> &);
 
-        Vector3 & operator*= (double);
-        Vector3 & operator/= (double);
-
-        friend Vector3 operator+ (const Vector3 &, const Vector3 &);
-        friend Vector3 operator- (const Vector3 &, const Vector3 &);
-
-        friend Vector3 operator* (const Vector3 &, double);
-        friend Vector3 operator* (double, const Vector3 &);
-        friend Vector3 operator/ (const Vector3 &, double);
-
-        friend Vector3 operator- (const Vector3 &);
-
-        friend std::ostream& operator<< (std::ostream&, const Vector3&);
+        Vector<T, size> & operator*= (T);
+        Vector<T, size> & operator/= (T);
     };
+
+    template <typename T, int size>
+    Vector<T, size> operator+ (const Vector<T, size> &, const Vector<T, size> &);
+
+    template <typename T, int size>
+    Vector<T, size> operator- (const Vector<T, size> &, const Vector<T, size> &);
+
+    template <typename T, int size>
+    Vector<T, size> operator* (const Vector<T, size> &, T);
+
+    template <typename T, int size>
+    Vector<T, size> operator* (T, const Vector<T, size> &);
+
+    template <typename T, int size>
+    Vector<T, size> operator/ (const Vector<T, size> &, T);
+
+    template <typename T, int size>
+    Vector<T, size> operator- (const Vector<T, size> &);
+
+    template <typename T, int size>
+    std::ostream& operator<< (std::ostream&, const Vector<T, size>&);
+
+    extern template struct Vector<double, 3>;
+    extern template Vector<double, 3> operator+ (const Vector<double, 3> &, const Vector<double, 3> &);
+    extern template Vector<double, 3> operator- (const Vector<double, 3> &, const Vector<double, 3> &);
+    extern template Vector<double, 3> operator* (const Vector<double, 3> &, double);
+    extern template Vector<double, 3> operator* (double, const Vector<double, 3> &);
+    extern template Vector<double, 3> operator/ (const Vector<double, 3> &, double);
+    extern template Vector<double, 3> operator- (const Vector<double, 3> &);
+    extern template std::ostream& operator<< (std::ostream&, const Vector<double, 3>&);
 }

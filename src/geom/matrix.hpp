@@ -11,14 +11,14 @@ namespace Geom {
         Matrix3();
 
         // Equivalent to the matlab: m3 = vec1 * vec2'
-        Matrix3(const Vector3 &vec1, const Vector3 &vec2);
+        Matrix3(const Vector<double, 3> &vec1, const Vector<double, 3> &vec2);
 
         static Matrix3 identity();
 
         Matrix3 transpose();
-        Vector3 col(int num);
+        Vector<double, 3> col(int num);
 
-        Vector3 operator* (const Vector3 &rhs);
+        Vector<double, 3> operator* (const Vector<double, 3> &rhs);
         Matrix3 operator+ (const Matrix3 &rhs);
         Matrix3 operator- (const Matrix3 &rhs);
         Matrix3 operator* (double rhs);
