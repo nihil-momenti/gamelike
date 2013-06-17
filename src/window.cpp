@@ -1,12 +1,11 @@
 #include "window.hpp"
 
+#include "debug.hpp"
+#include "main.hpp"
 #include "lights.hpp"
 
-SDL_GLContext Window::context = NULL;
-int Window::context_ref_count = 0;
-
 Window::Window(WindowSettings settings)
-        : error(false), sdl_window(NULL), view(settings.size.width, settings.size.height) {
+        : error(false), view(settings.size.width, settings.size.height), sdl_window(NULL), context(NULL) {
     sdl_window = SDL_CreateWindow(
             settings.name.c_str(),
             settings.topleft.x,
@@ -18,6 +17,8 @@ Window::Window(WindowSettings settings)
     if (sdl_window == NULL) {
         error = true;
         error_msg = SDL_GetError();
+    } else {
+        window_id = SDL_GetWindowID(sdl_window);
     }
 }
 
@@ -25,20 +26,14 @@ Window::~Window() {
     if (sdl_window != NULL) {
         SDL_DestroyWindow(sdl_window);
     }
-
-    Window::context_ref_count--;
-    if (Window::context != NULL && Window::context_ref_count == 0) {
-        SDL_GL_DeleteContext(context);
-        context = NULL;
-    }
+    SDL_GL_DeleteContext(context);
 }
 
 void Window::gl_init() {
-    Window::context_ref_count++;
-    if (Window::context == NULL) {
-        Window::context = SDL_GL_CreateContext(sdl_window);
+    if (context == NULL) {
+        context = SDL_GL_CreateContext(sdl_window);
     }
-    if (Window::context == NULL || GL::init_bindings() != 0) {
+    if (context == NULL || GL::init_bindings() != 0) {
         error = true;
         error_msg = SDL_GetError();
         return;
@@ -60,12 +55,12 @@ void Window::gl_init() {
 
 void Window::set_world(WorldView *world) {
     view.world = world;
-    SDL_GL_MakeCurrent(sdl_window, Window::context);
+    SDL_GL_MakeCurrent(sdl_window, context);
     world->gl_init();
 }
 
 void Window::render(double interpolation) {
-    SDL_GL_MakeCurrent(sdl_window, Window::context);
+    SDL_GL_MakeCurrent(sdl_window, context);
 
     GL::Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -83,4 +78,20 @@ void Window::render(double interpolation) {
     view.world->display();
 
     SDL_GL_SwapWindow(sdl_window);
+}
+
+void Window::handle_event(SDL_WindowEvent &event) {
+    int width, height;
+
+    switch (event.event) {
+    case SDL_WINDOWEVENT_RESIZED:
+        width = event.data1;
+        height = event.data2;
+
+        view.camera.update_size(width, height);
+        gl_init();
+
+    default:
+        break;
+    }
 }

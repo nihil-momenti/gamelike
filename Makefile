@@ -39,7 +39,7 @@ PROJECT = gamelike
 
 ###############################################################################
 
-all: src/GL_bindings.hpp $(PROJECT)-optimized $(PROJECT) $(PROJECT)-new-sdl
+all: src/GL_bindings.hpp $(PROJECT)-optimized $(PROJECT)
 rebuild: clean all
 
 

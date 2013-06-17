@@ -46,16 +46,14 @@ namespace Main {
                 }
                 return;
 
-           // case SDL_VIDEORESIZE:
-           //     width = event.resize.w;
-           //     height = event.resize.h;
-
-           //     if (SDL_SetVideoMode(width, height, 0, SDL_OPENGL | SDL_RESIZABLE) == NULL) {
-           //         Debug::error << "Set Video Mode Error: " << SDL_GetError() << std::endl;
-           //         running = false;
-           //     }
-           //     gl_init();
-           //     return;
+           case SDL_WINDOWEVENT:
+                if (window->window_id == event.window.windowID) {
+                    window->handle_event(event.window);
+                }
+                if (window2->window_id == event.window.windowID) {
+                    window2->handle_event(event.window);
+                }
+                return;
 
             default:
                 break;

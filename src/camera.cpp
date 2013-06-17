@@ -26,6 +26,12 @@ void Camera::gl_init() {
     GL::Viewport(0, 0, width, height);
 }
 
+void Camera::update_size(int _width, int _height) {
+    aspect = _width / (double) _height;
+    width = _width;
+    height = _height;
+}
+
 Geom::Vector3 Camera::forward() {
     Geom::Vector3 facing = (lookat - position).unit();
     return Geom::Vector3(facing.dx, 0, facing.dz).unit();

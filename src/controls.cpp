@@ -7,10 +7,10 @@ namespace Controls {
         Direction direction;
 
         switch (key.sym) {
-            case SDLK_w:      direction = FORWARD; break;
+            case SDLK_COMMA:      direction = FORWARD; break;
             case SDLK_a:      direction = LEFT;    break;
-            case SDLK_s:      direction = BACK;    break;
-            case SDLK_d:      direction = RIGHT;   break;
+            case SDLK_o:      direction = BACK;    break;
+            case SDLK_e:      direction = RIGHT;   break;
             case SDLK_SPACE:  direction = UP;      break;
             case SDLK_LSHIFT: direction = DOWN;    break;
             default:                               return false;

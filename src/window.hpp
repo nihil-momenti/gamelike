@@ -1,3 +1,5 @@
+#pragma once
+
 #include <SDL.h>
 #include <algorithm>
 #include <string>
@@ -26,13 +28,15 @@ class Window {
 
         void set_world(WorldView *);
         void render(double);
+        void handle_event(SDL_WindowEvent &);
 
+        int window_id;
         bool error;
         const char *error_msg;
-        SDL_Window *sdl_window;
-        static SDL_GLContext context;
-        static int context_ref_count;
+        SDL_GLContext context;
 
         View view;
+
     private:
+        SDL_Window *sdl_window;
 };

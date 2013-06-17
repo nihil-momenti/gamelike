@@ -5,15 +5,16 @@
 
 class Camera {
     public:
-        Camera(int, int);
+        Camera(int width, int height);
 
         void gl_init();
+        void update_size(int width, int height);
 
         void move(Direction);
         void stop(Direction);
-        void turn(double, double);
+        void turn(double horizontal, double vertical);
         void tick();
-        void look(double);
+        void look(double interpolation);
         void perspective();
 
     private:
