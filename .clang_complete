@@ -1,0 +1,11 @@
+-Wall
+-pedantic
+
+-std=c++0x
+
+-D_THREAD_SAFE
+
+-iquote./src
+
+-I/usr/local/include
+-I/usr/local/include/SDL2
