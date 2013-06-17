@@ -1,6 +1,11 @@
 CC  = clang
 CXX = clang++
 
+CC_ARGS = ~/.vim/bundle/clang_complete/bin/cc_args.py
+
+CC := $(if $(shell ls $(CC_ARGS)),$(CC_ARGS) $(CC),$(CC))
+CXX := $(if $(shell ls $(CC_ARGS)),$(CC_ARGS) $(CXX),$(CXX))
+
 ORIGINAL_CFLAGS   := $(CFLAGS)
 ORIGINAL_CPPFLAGS := $(CPPFLAGS)
 
