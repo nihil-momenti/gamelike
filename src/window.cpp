@@ -5,7 +5,7 @@
 #include "lights.hpp"
 
 Window::Window(WindowSettings settings)
-        : error(false), view(settings.size.width, settings.size.height), sdl_window(NULL), context(NULL) {
+        : error(false), context(NULL), view(settings.size.width, settings.size.height), sdl_window(NULL) {
     sdl_window = SDL_CreateWindow(
             settings.name.c_str(),
             settings.topleft.x,
